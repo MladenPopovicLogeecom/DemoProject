@@ -22,11 +22,11 @@ public class Category
         return $"Category [Id: {Id}, Title: {Title}, Code: {Code}, Description: {Description}]";
     }
 
-    public static Category getCategoryFromAddCategoryDto(AddCategoryDto dto)
+    public static Category GetCategoryFromAddCategoryDto(AddCategoryDto dto)
     {
-        Category NewCat = new Category(dto.Title, dto.Code, dto.Description, dto.ParentCategoryId);
-        NewCat.Id = Guid.NewGuid();
-        return NewCat;
+        Category newCat = new Category(dto.Title, dto.Code, dto.Description, dto.ParentCategoryId);
+        newCat.Id = Guid.NewGuid();
+        return newCat;
 
     }
 }

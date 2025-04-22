@@ -14,6 +14,7 @@ var app = builder.Build();
 // Mapira controllere (kao da kažeš: "slušaj rute iz tih klasa")
 app.MapControllers();
 
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;

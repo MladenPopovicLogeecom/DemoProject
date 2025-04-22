@@ -9,11 +9,7 @@ namespace WebApplication1.controller;
 [Route("category")]
 public class CategoryController : ControllerBase
 {
-
     private readonly Database _database;
-
-    //Svaki put kada udjes u controller ce se pozvati ovaj konstruktor, nemoj ovako da radis
-    //public Database Database = new Database();
 
     //Database je registrovan kao singleton, i ubacen je u dependency Injection kroz Program.cs
     //Ovde hvatamo DI putem konstruktora
@@ -43,7 +39,7 @@ public class CategoryController : ControllerBase
     {
         Console.WriteLine("radi");
         Console.WriteLine(addCategoryDto);
-        Category NewCategory = Category.getCategoryFromAddCategoryDto(addCategoryDto);
+        Category NewCategory = Category.GetCategoryFromAddCategoryDto(addCategoryDto);
         _database.AddCategory(NewCategory);
         
     } 
