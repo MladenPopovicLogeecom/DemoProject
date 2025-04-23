@@ -1,2 +1,4 @@
 bin/  
 obj/ 
+/ConsoleApp/DemoProject/bin/
+/ConsoleApp/DemoProject/obj/
