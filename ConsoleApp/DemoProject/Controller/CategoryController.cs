@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
+using DemoProject.Exceptions;
+using DemoProject.model.dto.categoryDto;
+using DemoProject.model.entities;
+using DemoProject.Service;
 using Microsoft.AspNetCore.Mvc;
-using WebApplication1.model;
-using WebApplication1.model.dto.categoryDto;
-using WebApplication1.model.entities;
-using WebApplication1.Service;
 
-namespace WebApplication1.controller;
+namespace DemoProject.controller;
 
 [ApiController]
 [Route("category")]
@@ -13,15 +13,15 @@ public class CategoryController : ControllerBase
 {
     private readonly CategoryService CategoryService;
     private readonly IMapper Mapper;
-    
+
 
     public CategoryController(CategoryService categoryService, IMapper mapper)
     {
         Mapper = mapper;
         CategoryService = categoryService;
-        
     }
-    
+
+
     [HttpGet("{id}")]
     public ActionResult<Category> GetCategoryWithId(Guid id)
     {
@@ -43,16 +43,15 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult AddCategory(AddCategoryDto addCategoryDto)
+    public ActionResult AddCategory(CategoryDto categoryDto)
     {
         if (!ModelState.IsValid)
         {
-            var errorMessages = ErrorMessages.GetModelStateErrors(ModelState);
-            return BadRequest(errorMessages);
+            return ValidationProblem(ModelState);
         }
-        
-        var newCategory = Mapper.Map<Category>(addCategoryDto);
-        
+
+        var newCategory = Mapper.Map<Category>(categoryDto);
+
         try
         {
             CategoryService.AddCategory(newCategory);
@@ -61,10 +60,10 @@ public class CategoryController : ControllerBase
         {
             return Conflict(e.Message);
         }
-        
+
         return Ok("Category Created");
     }
-    
+
     [HttpDelete("{id}")]
     public ActionResult DeleteCategoryWithId(Guid id)
     {
@@ -80,21 +79,20 @@ public class CategoryController : ControllerBase
         {
             return Conflict(e2.Message);
         }
-        
+
         return Ok("Category Deleted");
     }
 
-    [HttpPut]
-    public ActionResult UpdateWithId(Category category)
+    [HttpPut("{id}")]
+    public ActionResult UpdateWithId(Guid id,Category dto)
     {
         if (!ModelState.IsValid)
         {
-            var errorMessages = ErrorMessages.GetModelStateErrors(ModelState);
-            return BadRequest(errorMessages);
+            return ValidationProblem(ModelState);
         }
         try
         {
-            CategoryService.UpdateCategory(category);
+            CategoryService.UpdateCategory(id, dto);
         }
         catch (NotFoundException e1)
         {

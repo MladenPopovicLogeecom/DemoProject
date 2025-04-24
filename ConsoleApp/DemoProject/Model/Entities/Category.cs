@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApplication1.model.entities;
+namespace DemoProject.model.entities;
 
 public class Category
 {
@@ -11,8 +11,8 @@ public class Category
         Description = description;
         ParentCategoryId = parentCategoryId;
         ChildCategories = new List<Category>();
-        
     }
+
     public Guid Id { get; set; }
 
     [Required(ErrorMessage = "Title is required.")]

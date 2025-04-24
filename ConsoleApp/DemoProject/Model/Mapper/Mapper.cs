@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
-using WebApplication1.model.dto.categoryDto;
-using WebApplication1.model.entities;
+using DemoProject.model.dto.categoryDto;
+using DemoProject.model.entities;
 
-namespace WebApplication1.model.mapper;
+namespace DemoProject.model.mapper;
 
+//Will be used in the future!
 public class Mapper : Profile
 {
     public Mapper()
     {
-        CreateMap<AddCategoryDto, Category>();
+        CreateMap<CategoryDto, Category>();
     }
 }

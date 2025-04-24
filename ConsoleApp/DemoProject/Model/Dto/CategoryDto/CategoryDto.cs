@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApplication1.model.dto.categoryDto;
+namespace DemoProject.model.dto.categoryDto;
 
-public class AddCategoryDto
+public class CategoryDto
 {
     [Required(ErrorMessage = "Title is required.")]
     [StringLength(100, ErrorMessage = "Title cannot be longer than 100 characters.")]

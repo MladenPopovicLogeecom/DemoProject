@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace WebApplication1.model
+namespace DemoProject.model
 {
     public static class ErrorMessages
     {
-        
-        
         public static string GetModelStateErrors(ModelStateDictionary modelState)
         {
             var errorMessages = new List<string>();

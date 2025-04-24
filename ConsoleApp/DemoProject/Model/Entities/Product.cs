@@ -1,4 +1,4 @@
-﻿namespace WebApplication1.model.entities;
+﻿namespace DemoProject.model.entities;
 
 public class Product
 {
