@@ -5,7 +5,6 @@ namespace PresentationLayer.Repository.Implementation;
 
 public class CategoryRepositoryInMemory : ICategoryRepository
 {
-    
     public List<Category> Categories { get; set; }
 
     public CategoryRepositoryInMemory()
@@ -17,7 +16,7 @@ public class CategoryRepositoryInMemory : ICategoryRepository
     {
         Categories.Add(category);
     }
-
+    
     public void DeleteCategory(Category category)
     {
         Categories.Remove(category);

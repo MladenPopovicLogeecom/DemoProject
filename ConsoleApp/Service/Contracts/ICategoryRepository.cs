@@ -4,6 +4,9 @@ namespace PresentationLayer.Repository.Interface;
 
 public interface ICategoryRepository
 {
+    
+    //TODO NASTAVI, OBRISAO SAM DOMAIN SLOJ, sada prepovezi sta treba
+    //Entiteti su mi u service-u
     void AddCategory(Category category);
     void DeleteCategory(Category category);
     void SaveCategory (Category category);

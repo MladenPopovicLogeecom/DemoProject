@@ -13,6 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 //Scoped is created again for every http request!!
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 //builder.Services.AddScoped<ICategoryRepository, CategoryRepositoryInMemory>();
+
+//TODO : change when DI 
 builder.Services.AddSingleton<ICategoryRepository, CategoryRepositoryInMemory>();
 
 builder.Services.AddControllers();
