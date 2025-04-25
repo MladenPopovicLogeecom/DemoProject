@@ -9,5 +9,7 @@ namespace Service.Service.Interface
         void UpdateCategory(Guid id, Category dto);
         Category GetCategoryWithId(Guid id);
         List<Category> GetAllCategories();
+        List<Category> GetAllParents();
+        void seedDatabase();
     }
 }

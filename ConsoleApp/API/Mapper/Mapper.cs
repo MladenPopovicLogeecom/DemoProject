@@ -2,7 +2,7 @@
 using Domain.Model.Dto.CategoryDto;
 using Domain.Model.Entities;
 
-namespace DemoProject.model.mapper;
+namespace API.Mapper;
 
 
 public class Mapper : Profile

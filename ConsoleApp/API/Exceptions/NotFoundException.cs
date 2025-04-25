@@ -1,4 +1,4 @@
-﻿namespace DemoProject.Exceptions;
+﻿namespace API.Exceptions;
 
 public class NotFoundException : Exception
 {

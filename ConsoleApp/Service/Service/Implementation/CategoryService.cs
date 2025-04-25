@@ -11,6 +11,7 @@ public class CategoryService: ICategoryService
     {
         Repository = repository;
     }
+    
     public void AddCategory(Category category)
     {
         Repository.EnsureCodeIsUnique(category.Code);
@@ -62,5 +63,27 @@ public class CategoryService: ICategoryService
         return Repository.GetAllCategories();
     }
     
-    
+
+    public List<Category> GetAllParents()
+    {
+        var allCategories = GetAllCategories();
+
+        return allCategories
+            .Where(c => c.ParentCategoryId == null)
+            .ToList();
+    }
+
+    public void seedDatabase()
+    {
+        for (var i = 0; i < 3; i++)
+        {
+            var cat = new Category("Title " + i, "Code " + i,
+                "Description " + i,
+                null);
+            //I did not use AddCategory, beacause it creates new Guid
+            //For seeding database, i want to have "000-000...-000" Guid for every category, just for easier testing
+            Repository.AddCategory(cat);
+            //AddCategory(cat);
+        }
+    }
 }

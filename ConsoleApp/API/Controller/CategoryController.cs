@@ -1,11 +1,11 @@
-﻿using AutoMapper;
-using Service.Service.Interface;
-using DemoProject.Exceptions;
+﻿using API.Exceptions;
+using AutoMapper;
 using Domain.Model.Dto.CategoryDto;
 using Domain.Model.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Service.Service.Interface;
 
-namespace DemoProject.controller;
+namespace API.Controller;
 
 [ApiController]
 [Route("category")]
@@ -14,13 +14,11 @@ public class CategoryController : ControllerBase
     private readonly ICategoryService CategoryService;
     private readonly IMapper Mapper;
 
-
     public CategoryController(ICategoryService categoryService, IMapper mapper)
     {
         Mapper = mapper;
         CategoryService = categoryService;
     }
-
 
     [HttpGet("{id}")]
     public ActionResult<Category> GetCategoryWithId(Guid id)
@@ -40,6 +38,13 @@ public class CategoryController : ControllerBase
     public List<Category> GetAllCategories()
     {
         return CategoryService.GetAllCategories();
+    }    
+    
+    //// Useful for building hierarchical category views where child categories are shown under each parent.
+    [HttpGet("parents")]
+    public List<Category> GetAllParents()
+    {
+        return CategoryService.GetAllParents();
     }
 
     [HttpPost]
