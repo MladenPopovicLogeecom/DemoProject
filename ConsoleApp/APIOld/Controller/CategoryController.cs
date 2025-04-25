@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using Service.Service.Interface;
 using DemoProject.Exceptions;
-using DemoProject.model.dto.categoryDto;
-using DemoProject.model.entities;
-using DemoProject.Service;
+using Domain.Model.Dto.CategoryDto;
+using Domain.Model.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DemoProject.controller;
@@ -11,11 +11,11 @@ namespace DemoProject.controller;
 [Route("category")]
 public class CategoryController : ControllerBase
 {
-    private readonly CategoryService CategoryService;
+    private readonly ICategoryService CategoryService;
     private readonly IMapper Mapper;
 
 
-    public CategoryController(CategoryService categoryService, IMapper mapper)
+    public CategoryController(ICategoryService categoryService, IMapper mapper)
     {
         Mapper = mapper;
         CategoryService = categoryService;
@@ -84,12 +84,15 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public ActionResult UpdateWithId(Guid id,Category dto)
+    public ActionResult UpdateWithId(Guid id, Category dto)
     {
+        //TODO
+        //change to fluent validation.
         if (!ModelState.IsValid)
         {
             return ValidationProblem(ModelState);
         }
+
         try
         {
             CategoryService.UpdateCategory(id, dto);

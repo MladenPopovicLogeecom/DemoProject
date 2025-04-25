@@ -1,4 +1,4 @@
-﻿namespace DemoProject.model.entities;
+﻿namespace Domain.Model.Entities;
 
 public class Admin
 {

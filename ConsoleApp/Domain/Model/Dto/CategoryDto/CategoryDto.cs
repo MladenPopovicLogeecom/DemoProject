@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DemoProject.model.dto.categoryDto;
+namespace Domain.Model.Dto.CategoryDto;
 
 public class CategoryDto
 {

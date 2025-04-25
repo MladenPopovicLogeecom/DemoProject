@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using DemoProject.model.dto.categoryDto;
-using DemoProject.model.entities;
+using Domain.Model.Dto.CategoryDto;
+using Domain.Model.Entities;
 
 namespace DemoProject.model.mapper;
 
-//Will be used in the future!
+
 public class Mapper : Profile
 {
     public Mapper()
