@@ -2,3 +2,6 @@ bin/
 obj/ 
 /ConsoleApp/DemoProject/bin/
 /ConsoleApp/DemoProject/obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
