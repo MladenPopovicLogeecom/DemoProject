@@ -1,9 +1,7 @@
 using API.Validators;
-using Service.Service.Implementation;
-using Service.Service.Interface;
-using Domain.Model.Entities;
 using FluentValidation.AspNetCore;
-using PresentationLayer.Repository.Implementation;
+using Service.Services.Implementation;
+using Service.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

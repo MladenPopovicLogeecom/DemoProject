@@ -1,6 +1,5 @@
-﻿using Domain.Model.Dto.CategoryDto;
+﻿using API.DTOs.CategoryDTOs;
 using FluentValidation;
-using Domain.Model.Entities;
 
 namespace API.Validators;
 

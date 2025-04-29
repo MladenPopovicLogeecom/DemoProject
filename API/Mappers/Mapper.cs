@@ -1,8 +1,8 @@
-﻿using AutoMapper;
-using Domain.Model.Dto.CategoryDto;
-using Domain.Model.Entities;
+﻿using API.DTOs.CategoryDTOs;
+using AutoMapper;
+using PresentationLayer.Entities;
 
-namespace API.Mapper;
+namespace API.Mappers;
 
 
 public class Mapper : Profile

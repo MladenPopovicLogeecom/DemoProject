@@ -1,30 +1,23 @@
-﻿using Domain.Model.Entities;
-using PresentationLayer.Repository.Implementation;
-using Service.MyExceptions;
-using Service.MyExceptions.CategoryExceptions;
+﻿using PresentationLayer.Entities;
+using PresentationLayer.Repositories.Implementations;
+using Service.Exceptions.CategoryExceptions;
 
-namespace Service.Service.Implementation;
+namespace Service.Services.Implementation;
 
-public class CategoryValidator
+public class CategoryBusinessValidator(CategoryRepositoryInMemory repository)
 {
-    private readonly CategoryRepositoryInMemory repository;
-
-    public CategoryValidator(CategoryRepositoryInMemory repository)
-    {
-        this.repository = repository;
-    }
-        
     public void EnsureCodeIsUnique(string code)
     {
-        if (repository.GetAllCategories().Any(c => c.Code == code))
+        if (repository.GetCategoryByCode(code) == null)
         {
             throw new CategoryCodeIsNotUniqueException(code);
         }
+        
     }
 
     public void EnsureTitleIsUnique(string title)
     {
-        if (repository.GetAllCategories().Any(c => c.Title == title))
+        if (repository.GetCategoryByTitle(title) == null)
         {
             throw new CategoryTitleIsNotUniqueException(title);
         }
@@ -32,10 +25,11 @@ public class CategoryValidator
 
     public void EnsureIdExists(Guid id)
     {
-        if (!repository.GetAllCategories().Any(c => c.Id == id))
+        if (repository.GetCategoryById(id) == null)
         {
             throw new CategoryWithIdNotFoundException(id);
         }
+        
     }
 
     public void EnsureCategoryHasNoChildren(Category category)
@@ -63,13 +57,13 @@ public class CategoryValidator
 
         if (category.ParentCategoryId.HasValue)
         {
-            var oldParent = repository.GetCategoryById(category.ParentCategoryId.Value);
+            Category oldParent = repository.GetCategoryById(category.ParentCategoryId.Value)!;
             oldParent.ChildCategories.Remove(category);
         }
 
         if (newParentId.HasValue)
         {
-            var newParent = repository.GetCategoryById(newParentId.Value);
+            Category newParent = repository.GetCategoryById(newParentId.Value)!;
             newParent.ChildCategories.Add(category);
         }
 

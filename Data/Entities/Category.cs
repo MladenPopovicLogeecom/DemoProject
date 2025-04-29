@@ -1,25 +1,17 @@
-﻿namespace Domain.Model.Entities;
+﻿namespace PresentationLayer.Entities;
 
 
-public class Category
+public class Category(string title, string code, string description, Guid? parentCategoryId)
 {
-    public Category(string title, string code, string description, Guid? parentCategoryId)
-    {
-        Title = title;
-        Code = code;
-        Description = description;
-        ParentCategoryId = parentCategoryId;
-        ChildCategories = new List<Category>();
-    }
-    public Guid Id { get; set; }
+    public Guid? Id { get; set; }
 
-    public string Title { get; set; }
+    public string Title { get; set; } = title;
 
-    public string Code { get; set; } // unique
+    public string Code { get; set; } = code; // unique
 
-    public string Description { get; set; }
+    public string? Description { get; set; } = description;
 
-    public Guid? ParentCategoryId { get; set; } //? is nullable
+    public Guid? ParentCategoryId { get; set; } = parentCategoryId; //? is nullable
 
-    public List<Category> ChildCategories { get; set; }
+    public List<Category> ChildCategories { get; init; } = new();
 }

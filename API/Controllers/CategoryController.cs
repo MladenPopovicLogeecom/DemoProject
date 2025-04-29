@@ -1,11 +1,12 @@
-﻿using AutoMapper;
-using Domain.Model.Dto.CategoryDto;
-using Domain.Model.Entities;
+﻿using API.DTOs.CategoryDTOs;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Service.MyExceptions.CategoryExceptions;
-using Service.Service.Implementation;
+using PresentationLayer.Entities;
+using Service.Exceptions.CategoryExceptions;
+using Service.Services.Implementation;
+using Mapper = API.Mappers.Mapper;
 
-namespace API.Controller;
+namespace API.Controllers;
 
 [ApiController]
 [Route("category")]
@@ -17,16 +18,16 @@ public class CategoryController : ControllerBase
     
     public CategoryController()
     {
-        //Mapper = new AutoMapper.Mapper();
+        
         if (CategoryService == null)
         {
             CategoryService = new CategoryService();
-            CategoryService.seedDatabase();
+            CategoryService.SeedDatabase();
             
         }
         var config = new MapperConfiguration(cfg =>
         {
-            cfg.AddProfile<Mapper.Mapper>();
+            cfg.AddProfile<Mapper>();
         });
         mapper = config.CreateMapper();  
     }
@@ -36,7 +37,7 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            var category = CategoryService.GetCategoryWithId(id);
+            Category category = CategoryService.GetCategoryWithId(id);
             return Ok(category);
         }
         catch (CategoryWithIdNotFoundException exception)
@@ -61,7 +62,7 @@ public class CategoryController : ControllerBase
     [HttpPost]
     public ActionResult AddCategory(CategoryDto categoryDto)
     {
-        var newCategory = mapper.Map<Category>(categoryDto);
+        Category newCategory = mapper.Map<Category>(categoryDto);
 
         try
         {

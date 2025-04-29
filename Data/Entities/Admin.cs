@@ -1,17 +1,11 @@
-﻿namespace Domain.Model.Entities;
+﻿namespace PresentationLayer.Entities;
 
-public class Admin
+public class Admin(string firstName, string lastName, string password)
 {
-    public Admin(string firstName, string lastName, string password)
-    {
-        Id = Guid.NewGuid();
-        FirstName = firstName;
-        LastName = lastName;
-        Password = password;
-    }
+    public Guid? Id { get; set; } = Guid.NewGuid();
+    public required string FirstName { get; set; } = firstName;
+    public required string LastName { get; set; } = lastName;
 
-    public Guid Id { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string Password { get; set; }
+    //Hashed!
+    public required string Password { get; set; } = password;
 }

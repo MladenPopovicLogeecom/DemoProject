@@ -1,4 +1,4 @@
-﻿using Domain.Model.Entities;
+﻿using PresentationLayer.Entities;
 
 namespace Service.Contracts;
 
@@ -10,9 +10,10 @@ public interface ICategoryRepository
     void SaveCategory (Category category);
     void DeleteChildFromParent(Category parent, Category child);
     Category GetCategoryById(Guid id);
+    
     List<Category> GetAllCategories();
     
-    //Checkings and validations
+    //Checking and validations
     void EnsureCodeIsUnique(string code);
     void EnsureTitleIsUnique(string title);
     void EnsureIdExists(Guid id);

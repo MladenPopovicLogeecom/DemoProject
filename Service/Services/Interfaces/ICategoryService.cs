@@ -1,6 +1,6 @@
-﻿using Domain.Model.Entities;
+﻿using PresentationLayer.Entities;
 
-namespace Service.Service.Interface
+namespace Service.Services.Interfaces
 {
     public interface ICategoryService
     {
@@ -10,6 +10,6 @@ namespace Service.Service.Interface
         Category GetCategoryWithId(Guid id);
         List<Category> GetAllCategories();
         List<Category> GetAllParents();
-        void seedDatabase();
+        void SeedDatabase();
     }
 }
