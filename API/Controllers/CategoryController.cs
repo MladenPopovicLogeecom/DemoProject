@@ -70,7 +70,7 @@ public class CategoryController : ControllerBase
         }
         catch (Exception exception)
         {
-            return Conflict(exception.Message);
+            return BadRequest(exception.Message);
         }
 
         return Ok("Category Created");
@@ -89,7 +89,7 @@ public class CategoryController : ControllerBase
         }
         catch (Exception exception)
         {
-            return Conflict(exception.Message);
+            return BadRequest(exception.Message);
         }
 
         return Ok("Category Deleted");
