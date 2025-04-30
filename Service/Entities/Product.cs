@@ -1,4 +1,4 @@
-﻿namespace PresentationLayer.Entities;
+﻿namespace Service.Entities;
 
 public class Product
 {

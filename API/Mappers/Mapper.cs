@@ -1,6 +1,6 @@
 ﻿using API.DTOs.CategoryDTOs;
 using AutoMapper;
-using PresentationLayer.Entities;
+using Service.Entities;
 
 namespace API.Mappers;
 

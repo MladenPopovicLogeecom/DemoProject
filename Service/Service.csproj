@@ -7,9 +7,6 @@
         <Nullable>enable</Nullable>
         <RootNamespace>Service</RootNamespace>
     </PropertyGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Data\Data.csproj" />
-    </ItemGroup>
+    
 
 </Project>

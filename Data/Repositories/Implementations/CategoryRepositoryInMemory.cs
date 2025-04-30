@@ -1,50 +1,59 @@
-﻿using PresentationLayer.Entities;
+﻿using Service.Contracts.Repository;
+using Service.Entities;
 
 namespace PresentationLayer.Repositories.Implementations;
 
-public class CategoryRepositoryInMemory
+public class CategoryRepositoryInMemory : ICategoryRepository
 {
-    private List<Category> Categories = new();
+    private readonly List<Category> categories = new();
 
-    public void AddCategory(Category category)
+    public void Add(Category category)
     {
-        Categories.Add(category);
+        categories.Add(category);
+    }
+    public void Delete(Guid id)
+    {
+        categories.Remove(GetById(id)!);
     }
 
-    public void DeleteCategory(Category category)
+    public void Update(Category category)
     {
-        Categories.Remove(category);
+        int index = categories.FindIndex(c => c.Id == category.Id);
+        categories[index] = category;
     }
+    
+    public List<Category> GetAllParents()
+    {
+        return GetAll()
+            .Where(c => c.ParentCategoryId == null)
+            .ToList();
+    }
+    
 
-    private void SaveCategory(Category category)
-    {
-        int index = Categories.FindIndex(c => c.Id == category.Id);
-        Categories[index] = category;
-    }
 
     public void DeleteChildFromParent(Category parent, Category child)
     {
         parent.ChildCategories.Remove(child);
-        SaveCategory(parent);
+        Update(parent);
     }
 
-    public Category? GetCategoryById(Guid id)
+    public Category? GetById(Guid id)
     {
-        return Categories.FirstOrDefault(c => c.Id == id);
+        return categories.FirstOrDefault(c => c.Id == id);
     }
 
     public Category? GetCategoryByTitle(string title)
     {
-        return Categories.FirstOrDefault(c => c.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
+        return categories.FirstOrDefault(c => c.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
     }
 
     public Category? GetCategoryByCode(string code)
     {
-        return Categories.FirstOrDefault(c => c.Code.Equals(code, StringComparison.OrdinalIgnoreCase));
+        return categories.FirstOrDefault(c => c.Code.Equals(code, StringComparison.OrdinalIgnoreCase));
     }
 
-    public List<Category> GetAllCategories()
+    public List<Category> GetAll()
     {
-        return Categories;
+        return categories;
     }
 }

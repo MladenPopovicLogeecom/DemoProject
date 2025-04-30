@@ -1,23 +1,22 @@
-﻿using PresentationLayer.Entities;
-using PresentationLayer.Repositories.Implementations;
+﻿using Service.Contracts.Repository;
+using Service.Entities;
 using Service.Exceptions.CategoryExceptions;
 
 namespace Service.Services.Implementation;
 
-public class CategoryBusinessValidator(CategoryRepositoryInMemory repository)
+public class CategoryBusinessValidator(ICategoryRepository repository)
 {
     public void EnsureCodeIsUnique(string code)
     {
-        if (repository.GetCategoryByCode(code) == null)
+        if (repository.GetCategoryByCode(code) != null)
         {
             throw new CategoryCodeIsNotUniqueException(code);
         }
-        
     }
 
     public void EnsureTitleIsUnique(string title)
     {
-        if (repository.GetCategoryByTitle(title) == null)
+        if (repository.GetCategoryByTitle(title) != null)
         {
             throw new CategoryTitleIsNotUniqueException(title);
         }
@@ -25,11 +24,10 @@ public class CategoryBusinessValidator(CategoryRepositoryInMemory repository)
 
     public void EnsureIdExists(Guid id)
     {
-        if (repository.GetCategoryById(id) == null)
+        if (repository.GetById(id) == null)
         {
             throw new CategoryWithIdNotFoundException(id);
         }
-        
     }
 
     public void EnsureCategoryHasNoChildren(Category category)
@@ -57,13 +55,13 @@ public class CategoryBusinessValidator(CategoryRepositoryInMemory repository)
 
         if (category.ParentCategoryId.HasValue)
         {
-            Category oldParent = repository.GetCategoryById(category.ParentCategoryId.Value)!;
+            Category oldParent = repository.GetById(category.ParentCategoryId.Value)!;
             oldParent.ChildCategories.Remove(category);
         }
 
         if (newParentId.HasValue)
         {
-            Category newParent = repository.GetCategoryById(newParentId.Value)!;
+            Category newParent = repository.GetById(newParentId.Value)!;
             newParent.ChildCategories.Add(category);
         }
 

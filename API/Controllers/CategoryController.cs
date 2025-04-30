@@ -1,9 +1,9 @@
 ﻿using API.DTOs.CategoryDTOs;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using PresentationLayer.Entities;
+using Service.Entities;
 using Service.Exceptions.CategoryExceptions;
-using Service.Services.Implementation;
+using Service.Services.Interfaces;
 using Mapper = API.Mappers.Mapper;
 
 namespace API.Controllers;
@@ -13,23 +13,18 @@ namespace API.Controllers;
 public class CategoryController : ControllerBase
 {
     private readonly IMapper mapper;
-    private static CategoryService CategoryService;
+    private static ICategoryService categoryService;
 
     
-    public CategoryController()
+    public CategoryController(ICategoryService iCategoryService, IMapper iMapper)
     {
-        
-        if (CategoryService == null)
-        {
-            CategoryService = new CategoryService();
-            CategoryService.SeedDatabase();
-            
-        }
+        mapper = iMapper;
+        categoryService = iCategoryService;
         var config = new MapperConfiguration(cfg =>
         {
             cfg.AddProfile<Mapper>();
         });
-        mapper = config.CreateMapper();  
+       
     }
 
     [HttpGet("{id}")]
@@ -37,7 +32,7 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            Category category = CategoryService.GetCategoryWithId(id);
+            Category category = categoryService.GetById(id);
             return Ok(category);
         }
         catch (CategoryWithIdNotFoundException exception)
@@ -49,14 +44,14 @@ public class CategoryController : ControllerBase
     [HttpGet]
     public List<Category> GetAllCategories()
     {
-        return CategoryService.GetAllCategories();
+        return categoryService.GetAll();
     }    
     
     //// Useful for building hierarchical category views where child categories are shown under each parent.
     [HttpGet("parents")]
     public List<Category> GetAllParents()
     {
-        return CategoryService.GetAllParents();
+        return categoryService.GetAllParents();
     }
 
     [HttpPost]
@@ -66,7 +61,7 @@ public class CategoryController : ControllerBase
 
         try
         {
-            CategoryService.AddCategory(newCategory);
+            categoryService.Add(newCategory);
         }
         catch (Exception exception)
         {
@@ -81,7 +76,7 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            CategoryService.DeleteCategoryWithId(id);
+            categoryService.DeleteById(id);
         }
         catch (CategoryWithIdNotFoundException categoryWithIdNotFoundException)
         {
@@ -100,7 +95,7 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            CategoryService.UpdateCategory(id, dto);
+            categoryService.Update(id, dto);
         }
         catch (CategoryWithIdNotFoundException categoryWithIdNotFoundException)
         {

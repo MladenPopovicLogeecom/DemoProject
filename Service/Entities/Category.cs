@@ -1,4 +1,4 @@
-﻿namespace PresentationLayer.Entities;
+﻿namespace Service.Entities;
 
 
 public class Category(string title, string code, string description, Guid? parentCategoryId)
