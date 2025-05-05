@@ -1,4 +1,5 @@
 using API.Validators;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using PresentationLayer.Repositories.Implementations;
 using Service.Contracts.Repository;
@@ -7,14 +8,14 @@ using Service.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddSingleton<ICategoryRepository, CategoryRepositoryInMemory>();
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(Program));
 
+builder.Services.AddValidatorsFromAssemblyContaining<ValidatorCategory>();
+builder.Services.AddFluentValidationAutoValidation();
 
-builder.Services.AddControllers()
-    .AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<ValidatorCategory>(); });
 
 var app = builder.Build();
 

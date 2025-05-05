@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Service.Entities;
 using Service.Exceptions.CategoryExceptions;
 using Service.Services.Interfaces;
-using Mapper = API.Mappers.Mapper;
 
 namespace API.Controllers;
 
@@ -13,17 +12,14 @@ namespace API.Controllers;
 public class CategoryController : ControllerBase
 {
     private readonly IMapper mapper;
-    private static ICategoryService categoryService;
+    private readonly ICategoryService categoryService;
 
     
     public CategoryController(ICategoryService iCategoryService, IMapper iMapper)
     {
         mapper = iMapper;
         categoryService = iCategoryService;
-        var config = new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile<Mapper>();
-        });
+
        
     }
 
@@ -32,8 +28,7 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            Category category = categoryService.GetById(id);
-            return Ok(category);
+            return Ok(categoryService.GetById(id));
         }
         catch (CategoryWithIdNotFoundException exception)
         {
@@ -72,7 +67,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public ActionResult DeleteCategoryWithId(Guid id)
+    public ActionResult DeleteById(Guid id)
     {
         try
         {
@@ -91,7 +86,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public ActionResult UpdateWithId(Guid id, Category dto)
+    public ActionResult UpdateById(Guid id, Category dto)
     {
         try
         {

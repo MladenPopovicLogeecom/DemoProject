@@ -10,7 +10,7 @@ public class ValidatorCategory : AbstractValidator<CategoryDto>
         
         RuleFor(x => x.Title)
             .NotEmpty().WithMessage("Title is required.")
-            .Length(1, 100).WithMessage("Title cannot be longer than 100 characters.");
+            .Length(4, 20).WithMessage("Title must be between 4 and 20 characters");
 
         RuleFor(x => x.Code)
             .NotEmpty().WithMessage("Code is required.")

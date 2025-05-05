@@ -11,6 +11,7 @@ public class CategoryRepositoryInMemory : ICategoryRepository
     {
         categories.Add(category);
     }
+
     public void Delete(Guid id)
     {
         categories.Remove(GetById(id)!);
@@ -21,14 +22,13 @@ public class CategoryRepositoryInMemory : ICategoryRepository
         int index = categories.FindIndex(c => c.Id == category.Id);
         categories[index] = category;
     }
-    
+
     public List<Category> GetAllParents()
     {
         return GetAll()
             .Where(c => c.ParentCategoryId == null)
             .ToList();
     }
-    
 
 
     public void DeleteChildFromParent(Category parent, Category child)
