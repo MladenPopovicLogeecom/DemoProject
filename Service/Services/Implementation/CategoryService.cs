@@ -15,7 +15,7 @@ public class CategoryService : ICategoryService
         categoryBusinessValidator = new CategoryBusinessValidator(repository);
     }
 
-    public void Add(Category category)
+    public Task Add(Category category)
     {
         categoryBusinessValidator.EnsureCodeIsUnique(category.Code);
         categoryBusinessValidator.EnsureTitleIsUnique(category.Title);
@@ -29,9 +29,10 @@ public class CategoryService : ICategoryService
 
         category.Id = Guid.NewGuid();
         repository.Add(category);
+        return Task.CompletedTask;
     }
-
-    public void DeleteById(Guid id)
+    
+    public Task DeleteById(Guid id)
     {
         categoryBusinessValidator.EnsureIdExists(id);
         Category category = repository.GetById(id).GetAwaiter().GetResult()!;
@@ -44,9 +45,10 @@ public class CategoryService : ICategoryService
         }
         
         repository.Delete(category.Id!.Value);
+        return Task.CompletedTask;
     }
 
-    public void Update(Guid id, Category dto)
+    public Task Update(Guid id, Category dto)
     {
         categoryBusinessValidator.EnsureIdExists(id);
         categoryBusinessValidator.EnsureTitleIsUnique(dto.Title);
@@ -58,25 +60,26 @@ public class CategoryService : ICategoryService
         existingCategory.Code = dto.Code;
         existingCategory.Description = dto.Description;
         existingCategory.ParentCategoryId = dto.ParentCategoryId;
+        return Task.CompletedTask;
     }
 
-    public Category GetById(Guid id)
+    public async Task<Category> GetById(Guid id)
     {
         categoryBusinessValidator.EnsureIdExists(id);
-        return repository.GetById(id).GetAwaiter().GetResult()!;
+        return (await repository.GetById(id))!;
     }
 
-    public List<Category> GetAll()
+    public async Task<List<Category>> GetAll()
     {
-        return repository.GetAll().GetAwaiter().GetResult();
+        return await repository.GetAll();
     }
     
-    public List<Category> GetAllParents()
+    public async Task<List<Category>> GetAllParents()
     {
-        return repository.GetAllParents().GetAwaiter().GetResult();
+        return await repository.GetAllParents();
     }
 
-    public void SeedDatabase()
+    public Task SeedDatabase()
     {
         for (var i = 0; i < 3; i++)
         {
@@ -89,5 +92,6 @@ public class CategoryService : ICategoryService
 
             repository.Add(cat);
         }
+        return Task.CompletedTask;
     }
 }

@@ -11,16 +11,9 @@ using Service.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-    });
-
-
 //Dependency Injection
 builder.Services.AddTransient<ICategoryService, CategoryService>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepositoryPostgre>();
+builder.Services.AddTransient<ICategoryRepository, CategoryRepositoryPostgre>();
 
 //Controllers
 builder.Services.AddControllers();
@@ -32,10 +25,9 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddValidatorsFromAssemblyContaining<ValidatorCategory>();
 builder.Services.AddFluentValidationAutoValidation();
 
-
 // PostgreSQL
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("MyPostgreSQLConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DBConnection")));
 // in AppSettings.json
 
 
@@ -49,5 +41,4 @@ using (var scope = app.Services.CreateScope())
     ICategoryService categoryService = services.GetRequiredService<ICategoryService>();
     //categoryService.SeedDatabase();
 }
-
 app.Run();

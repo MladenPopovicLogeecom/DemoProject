@@ -14,12 +14,4 @@ public class AddNewColumn : Migration
     {
         //Delete.Column("MyColumnXD").FromTable("Categories");
     }
-    //Ispisi u wordu sta je alter i ove komande
-    //Ispisi u wordu sta je alter i ove komande
-    //Ispisi u wordu sta je alter i ove komande
-    //Ispisi u wordu sta je alter i ove komande
-    //Ispisi u wordu sta je alter i ove komande
-    //Ispisi u wordu sta je alter i ove komande
-    //Ispisi u wordu sta je alter i ove komande
-    
 }

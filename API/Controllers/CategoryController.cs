@@ -16,11 +16,11 @@ public class CategoryController(ICategoryService iCategoryService, IMapper iMapp
 
 
     [HttpGet("{id}")]
-    public ActionResult<Category> GetCategoryWithId(Guid id)
+    public async Task<ActionResult<Category>> GetCategoryWithId(Guid id)
     {
         try
         {
-            return Ok(categoryService.GetById(id));
+            return Ok(await categoryService.GetById(id));
         }
         catch (CategoryWithIdNotFoundException exception)
         {
@@ -29,26 +29,26 @@ public class CategoryController(ICategoryService iCategoryService, IMapper iMapp
     }
 
     [HttpGet]
-    public List<Category> GetAllCategories()
+    public async Task<List<Category>> GetAllCategories()
     {
-        return categoryService.GetAll();
+        return await categoryService.GetAll();
     }
 
     //// Useful for building hierarchical category views where child categories are shown under each parent.
     [HttpGet("parents")]
-    public List<Category> GetAllParents()
+    public async Task<List<Category>> GetAllParents()
     {
-        return categoryService.GetAllParents();
+        return await categoryService.GetAllParents();
     }
 
     [HttpPost]
-    public ActionResult AddCategory(CategoryDto categoryDto)
+    public async Task<ActionResult> AddCategory(CategoryDto categoryDto)
     {
         Category newCategory = mapper.Map<Category>(categoryDto);
 
         try
         {
-            categoryService.Add(newCategory);
+            await categoryService.Add(newCategory);
         }
         catch (Exception exception)
         {
@@ -59,11 +59,11 @@ public class CategoryController(ICategoryService iCategoryService, IMapper iMapp
     }
 
     [HttpDelete("{id}")]
-    public ActionResult DeleteById(Guid id)
+    public async Task<ActionResult> DeleteById(Guid id)
     {
         try
         {
-            categoryService.DeleteById(id);
+            await categoryService.DeleteById(id);
         }
         catch (CategoryWithIdNotFoundException categoryWithIdNotFoundException)
         {
@@ -73,17 +73,16 @@ public class CategoryController(ICategoryService iCategoryService, IMapper iMapp
         {
             return BadRequest(exception.Message);
         }
-
         return Ok("Category Deleted");
     }
 
     [HttpPut("{id}")]
-    public ActionResult UpdateById(Guid id, CategoryDto dto)
+    public async Task<ActionResult> UpdateById(Guid id, CategoryDto dto)
     {
         Category newCategory = mapper.Map<Category>(dto);
         try
         {
-            categoryService.Update(id, newCategory);
+            await categoryService.Update(id, newCategory);
         }
         catch (CategoryWithIdNotFoundException categoryWithIdNotFoundException)
         {

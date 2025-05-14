@@ -8,7 +8,7 @@ var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .Build();
 
-var connectionString = configuration.GetConnectionString("MyPostgreSQLConnection");
+var connectionString = configuration.GetConnectionString("DBConnection");
 
 var serviceProvider = new ServiceCollection()
     .AddFluentMigratorCore()

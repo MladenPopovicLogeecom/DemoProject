@@ -23,6 +23,7 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context) : ICategory
         }
     }
 
+    //Context pamti stanje, flagged updated
     public async Task Update(Category entity)
     {
         context.Categories.Update(entity);
