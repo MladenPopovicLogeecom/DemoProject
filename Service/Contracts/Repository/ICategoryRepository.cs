@@ -4,10 +4,10 @@ namespace Service.Contracts.Repository;
 
 public interface ICategoryRepository : IRepository<Category>
 {
-    List<Category> GetAllParents();
-    void DeleteChildFromParent(Category parent, Category child);
-    Category? GetCategoryByTitle(string title);
-    Category? GetCategoryByCode(string code);
+    Task<List<Category>> GetAllParents();
+    Task DeleteChildFromParent(Category parent, Category child);
+    Task<Category?> GetCategoryByTitle(string title);
+    Task<Category?> GetCategoryByCode(string code);
     
     
     

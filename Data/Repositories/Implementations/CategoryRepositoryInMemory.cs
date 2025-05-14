@@ -1,59 +1,63 @@
 ﻿using Service.Contracts.Repository;
 using Service.Entities;
 
-namespace PresentationLayer.Repositories.Implementations;
+namespace Data.Repositories.Implementations;
 
 public class CategoryRepositoryInMemory : ICategoryRepository
 {
     private readonly List<Category> categories = new();
 
-    public void Add(Category category)
+    public Task Add(Category category)
     {
         categories.Add(category);
+        return Task.CompletedTask;
     }
 
-    public void Delete(Guid id)
+    public Task Delete(Guid id)
     {
-        categories.Remove(GetById(id)!);
+        categories.Remove(GetById(id).GetAwaiter().GetResult()!);
+        return Task.CompletedTask;
     }
 
-    public void Update(Category category)
+    public Task Update(Category category)
     {
         int index = categories.FindIndex(c => c.Id == category.Id);
         categories[index] = category;
+        return Task.CompletedTask;
     }
 
-    public List<Category> GetAllParents()
+    public Task<List<Category>> GetAllParents()
     {
-        return GetAll()
-            .Where(c => c.ParentCategoryId == null)
-            .ToList();
+        var parents = categories.Where(c => c.ParentCategoryId == null).ToList();
+        return Task.FromResult(parents);
     }
 
 
-    public void DeleteChildFromParent(Category parent, Category child)
+    public Task DeleteChildFromParent(Category parent, Category child)
     {
         parent.ChildCategories.Remove(child);
         Update(parent);
+        return Task.CompletedTask;
     }
 
-    public Category? GetById(Guid id)
+    public Task<Category?> GetById(Guid id)
     {
-        return categories.FirstOrDefault(c => c.Id == id);
+        return Task.FromResult(categories.FirstOrDefault(c => c.Id == id));
     }
 
-    public Category? GetCategoryByTitle(string title)
+    public Task<Category?> GetCategoryByTitle(string title)
     {
-        return categories.FirstOrDefault(c => c.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
+        return Task.FromResult(categories.FirstOrDefault
+            (c => c.Title.Equals(title, StringComparison.OrdinalIgnoreCase)));
     }
 
-    public Category? GetCategoryByCode(string code)
+    public Task<Category?> GetCategoryByCode(string code)
     {
-        return categories.FirstOrDefault(c => c.Code.Equals(code, StringComparison.OrdinalIgnoreCase));
+        return Task.FromResult(categories.FirstOrDefault(c => c.Code.Equals(code, StringComparison.OrdinalIgnoreCase)));
     }
 
-    public List<Category> GetAll()
+    public Task<List<Category>> GetAll()
     {
-        return categories;
+        return Task.FromResult(categories);
     }
 }

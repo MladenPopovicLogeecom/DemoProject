@@ -24,7 +24,7 @@ public class CategoryService : ICategoryService
         if (category.ParentCategoryId != null)
         {
             categoryBusinessValidator.EnsureIdExists(category.ParentCategoryId.Value);
-            repository.GetById(category.ParentCategoryId.Value)!.ChildCategories.Add(category);
+            repository.GetById(category.ParentCategoryId.Value).GetAwaiter().GetResult()!.ChildCategories.Add(category);
         }
 
         category.Id = Guid.NewGuid();
@@ -34,12 +34,12 @@ public class CategoryService : ICategoryService
     public void DeleteById(Guid id)
     {
         categoryBusinessValidator.EnsureIdExists(id);
-        Category category = repository.GetById(id)!;
+        Category category = repository.GetById(id).GetAwaiter().GetResult()!;
         categoryBusinessValidator.EnsureCategoryHasNoChildren(category);
         if (category.ParentCategoryId != null)
         {
             categoryBusinessValidator.EnsureIdExists(category.ParentCategoryId.Value);
-            Category parent = repository.GetById(category.ParentCategoryId.Value)!;
+            Category parent = repository.GetById(category.ParentCategoryId.Value).GetAwaiter().GetResult()!;
             repository.DeleteChildFromParent(parent, category);
         }
         
@@ -50,7 +50,7 @@ public class CategoryService : ICategoryService
     {
         categoryBusinessValidator.EnsureIdExists(id);
         categoryBusinessValidator.EnsureTitleIsUnique(dto.Title);
-        Category existingCategory = repository.GetById(id)!;
+        Category existingCategory = repository.GetById(id).GetAwaiter().GetResult()!;
         categoryBusinessValidator.EnsureNotSettingItselfAsParent(existingCategory, dto);
         categoryBusinessValidator.HandleParentCategoryChange(existingCategory, dto.ParentCategoryId);
 
@@ -63,32 +63,31 @@ public class CategoryService : ICategoryService
     public Category GetById(Guid id)
     {
         categoryBusinessValidator.EnsureIdExists(id);
-        return repository.GetById(id)!;
+        return repository.GetById(id).GetAwaiter().GetResult()!;
     }
 
     public List<Category> GetAll()
     {
-        return repository.GetAll();
+        return repository.GetAll().GetAwaiter().GetResult();
     }
-
-
+    
     public List<Category> GetAllParents()
     {
-        return repository.GetAllParents();
+        return repository.GetAllParents().GetAwaiter().GetResult();
     }
 
     public void SeedDatabase()
     {
         for (var i = 0; i < 3; i++)
         {
-            
             Category cat = new Category("Title " + i, "Code " + i,
                 "Description " + i,
-                null);
-            cat.Id = Guid.Empty;
-            
+                null)
+            {
+                Id = Guid.Empty
+            };
+
             repository.Add(cat);
-            //Add(cat);
         }
     }
 }

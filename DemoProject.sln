@@ -6,6 +6,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{496DAF42-D726-45E6-9097-3039349519CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataEF", "DataEF\DataEF.csproj", "{C456D281-D636-4BC5-A13E-4B36ABEFD579}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Migrations", "Migrations\Migrations.csproj", "{ACCCDAC6-A438-4652-AAFC-6F9D6F8A9D61}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +28,13 @@ Global
 		{496DAF42-D726-45E6-9097-3039349519CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{496DAF42-D726-45E6-9097-3039349519CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{496DAF42-D726-45E6-9097-3039349519CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C456D281-D636-4BC5-A13E-4B36ABEFD579}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C456D281-D636-4BC5-A13E-4B36ABEFD579}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C456D281-D636-4BC5-A13E-4B36ABEFD579}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C456D281-D636-4BC5-A13E-4B36ABEFD579}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACCCDAC6-A438-4652-AAFC-6F9D6F8A9D61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACCCDAC6-A438-4652-AAFC-6F9D6F8A9D61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACCCDAC6-A438-4652-AAFC-6F9D6F8A9D61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACCCDAC6-A438-4652-AAFC-6F9D6F8A9D61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

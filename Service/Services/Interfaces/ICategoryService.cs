@@ -2,14 +2,10 @@
 
 namespace Service.Services.Interfaces
 {
-    public interface ICategoryService
+    public interface ICategoryService : IService<Category>
     {
-        void Add(Category category);
-        void DeleteById(Guid id);
-        void Update(Guid id, Category dto);
-        Category GetById(Guid id);
-        List<Category> GetAll();
+        
         List<Category> GetAllParents();
-        void SeedDatabase();
+        
     }
 }
