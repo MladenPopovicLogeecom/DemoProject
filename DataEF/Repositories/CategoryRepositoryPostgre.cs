@@ -22,8 +22,7 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context) : ICategory
             await context.SaveChangesAsync();
         }
     }
-
-    //Context pamti stanje, flagged updated
+    
     public async Task Update(Category entity)
     {
         context.Categories.Update(entity);
@@ -32,19 +31,22 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context) : ICategory
 
     public async Task<Category?> GetById(Guid id)
     {
-        return await context.Categories.FindAsync(id);
+        return await context.Categories
+            .Include(c => c.ChildCategories)
+            .FirstOrDefaultAsync(c => c.Id == id);
     }
 
     public async Task<List<Category>> GetAll()
     {
-        return await context.Categories.ToListAsync();
+        return await context.Categories.Include(c => c.ChildCategories)
+            .ToListAsync();
     }
 
     public async Task<List<Category>> GetAllParents()
     {
-        return await context.Categories.Where(c => c.ParentCategoryId == null).ToListAsync();
+        return await context.Categories.Where(c => c.ParentCategoryId == null)
+            .Include(c => c.ChildCategories).ToListAsync();
     }
-
     
     public async Task DeleteChildFromParent(Category parent, Category child)
     {

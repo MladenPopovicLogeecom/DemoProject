@@ -1,4 +1,3 @@
-using System.Text.Json.Serialization;
 using API.Validators;
 using DataEF.EntityFramework;
 using DataEF.Repositories;
@@ -30,15 +29,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DBConnection")));
 // in AppSettings.json
 
-
 var app = builder.Build();
 
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    ICategoryService categoryService = services.GetRequiredService<ICategoryService>();
-    //categoryService.SeedDatabase();
-}
 app.Run();

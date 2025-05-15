@@ -32,7 +32,7 @@ public class CategoryBusinessValidator(ICategoryRepository repository)
 
     public void EnsureCategoryHasNoChildren(Category category)
     {
-        if (category.ChildCategories != null && category.ChildCategories.Any())
+        if (category.ChildCategories != null && category.ChildCategories!.Any())
         {
             throw new CategoryHasChildrenException(category.Title);
         }

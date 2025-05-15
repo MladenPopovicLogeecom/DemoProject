@@ -34,13 +34,13 @@ public class CategoryController(ICategoryService iCategoryService, IMapper iMapp
         return await categoryService.GetAll();
     }
 
-    //// Useful for building hierarchical category views where child categories are shown under each parent.
+    //// Useful for building hierarchical category views where child categories are
+    /// shown under each parent.
     [HttpGet("parents")]
     public async Task<List<Category>> GetAllParents()
     {
         return await categoryService.GetAllParents();
     }
-
     [HttpPost]
     public async Task<ActionResult> AddCategory(CategoryDto categoryDto)
     {
