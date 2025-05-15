@@ -81,7 +81,7 @@ public class CategoryService : ICategoryService
         {
             Category cat = new Category("Title " + i, "Code " + i,
                 "Description " + i,
-                null)
+                null,null)
             {
                 Id = Guid.Empty
             };

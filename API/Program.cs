@@ -1,18 +1,25 @@
+using System.Threading.Channels;
 using API.Validators;
 using DataEF.EntityFramework;
 using DataEF.Repositories;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using Service.BackgroundServices;
 using Service.Contracts.Repository;
 using Service.Services.Implementation;
 using Service.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 //Dependency Injection
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepositoryPostgre>();
+//Background process
+builder.Services.AddSingleton(Channel.CreateUnbounded<string>());
+builder.Services.AddHostedService<LoggerBackgroundService>();
+
 
 //Controllers
 builder.Services.AddControllers();
@@ -32,5 +39,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 var app = builder.Build();
 
 app.MapControllers();
+
 
 app.Run();
