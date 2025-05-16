@@ -1,4 +1,5 @@
-﻿using BackgroundWorker.BackgroundServices;
+﻿using System.Threading.Channels;
+using BackgroundWorker.BackgroundServices;
 using DataEF.EntityFramework;
 using DataEF.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +14,10 @@ var builder = Host.CreateDefaultBuilder(args)
         var configuration = hostContext.Configuration;
 
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(configuration.GetConnectionString("DBConnection")));
         
         services.AddHostedService<Deleter>();
+        services.AddSingleton(Channel.CreateUnbounded<string>());
         services.AddScoped<ICategoryRepository, CategoryRepositoryPostgre>();
     });
 

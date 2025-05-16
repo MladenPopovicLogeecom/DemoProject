@@ -6,6 +6,8 @@ namespace Service.Services.Interfaces
     {
         
         Task<List<Category>> GetAllParents();
+        Task SoftDelete(Guid id);
+        
         
     }
 }

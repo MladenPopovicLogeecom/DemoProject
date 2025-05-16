@@ -13,7 +13,7 @@ public class CategoryRepositoryInMemory : ICategoryRepository
         return Task.CompletedTask;
     }
 
-    public Task Delete(Guid id)
+    public Task HardDelete(Guid id)
     {
         categories.Remove(GetById(id).GetAwaiter().GetResult()!);
         return Task.CompletedTask;
@@ -32,6 +32,15 @@ public class CategoryRepositoryInMemory : ICategoryRepository
         return Task.FromResult(parents);
     }
 
+    public Task HardDeleteBeforeDate(DateTime date)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task SoftDelete(Guid id)
+    {
+        throw new NotImplementedException();
+    }
 
     public Task DeleteChildFromParent(Category parent, Category child)
     {

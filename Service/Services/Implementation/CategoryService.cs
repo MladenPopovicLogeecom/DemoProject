@@ -30,20 +30,6 @@ public class CategoryService : ICategoryService
         await repository.Add(category);
     }
 
-    public async Task DeleteById(Guid id)
-    {
-        categoryBusinessValidator.EnsureIdExists(id);
-        Category category = (await repository.GetById(id))!;
-        categoryBusinessValidator.EnsureCategoryHasNoChildren(category);
-        if (category.ParentCategoryId != null)
-        {
-            categoryBusinessValidator.EnsureIdExists(category.ParentCategoryId.Value);
-            Category parent = repository.GetById(category.ParentCategoryId.Value).GetAwaiter().GetResult()!;
-            await repository.DeleteChildFromParent(parent, category);
-        }
-
-        await repository.Delete(category.Id!.Value);
-    }
 
     public async Task Update(Guid id, Category dto)
     {
@@ -75,13 +61,43 @@ public class CategoryService : ICategoryService
         return await repository.GetAllParents();
     }
 
+    public async Task HardDeleteById(Guid id)
+    {
+        Category cat = await DeleteLogic(id);
+        await repository.HardDelete(cat.Id!.Value);
+    }
+
+    public async Task SoftDelete(Guid id)
+    {
+        Category cat = await DeleteLogic(id);
+        await repository.SoftDelete(cat.Id!.Value);
+    }
+
+    //We have soft delete and hard delete. Currently, we are using only soft delete.
+    //But i don't want to delete hard delete method in case we need it later.
+    //So i made method with shared logic, just for the cleaner code.
+    private async Task<Category> DeleteLogic(Guid id)
+    {
+        categoryBusinessValidator.EnsureIdExists(id);
+        Category category = (await repository.GetById(id))!;
+        categoryBusinessValidator.EnsureCategoryHasNoChildren(category);
+        if (category.ParentCategoryId != null)
+        {
+            categoryBusinessValidator.EnsureIdExists(category.ParentCategoryId.Value);
+            Category parent = repository.GetById(category.ParentCategoryId.Value).GetAwaiter().GetResult()!;
+            await repository.DeleteChildFromParent(parent, category);
+        }
+
+        return category;
+    }
+
     public Task SeedDatabase()
     {
         for (var i = 0; i < 3; i++)
         {
             Category cat = new Category("Title " + i, "Code " + i,
                 "Description " + i,
-                null,null)
+                null, null)
             {
                 Id = Guid.Empty
             };

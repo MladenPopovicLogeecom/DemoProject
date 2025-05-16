@@ -1,13 +1,12 @@
 ﻿using System.Threading.Channels;
 using DataEF.EntityFramework;
 using Microsoft.EntityFrameworkCore;
-using Service.BackgroundServices;
 using Service.Contracts.Repository;
 using Service.Entities;
 
 namespace DataEF.Repositories;
 
-public class CategoryRepositoryPostgre(ApplicationDbContext context,Channel<string>channel) : ICategoryRepository
+public class CategoryRepositoryPostgre(ApplicationDbContext context, Channel<string> channel) : ICategoryRepository
 {
     public async Task Add(Category entity)
     {
@@ -16,7 +15,7 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context,Channel<stri
         await context.SaveChangesAsync();
     }
 
-    public async Task Delete(Guid id)
+    public async Task HardDelete(Guid id)
     {
         await channel.Writer.WriteAsync("Deleting category");
         var category = await context.Categories.FindAsync(id);
@@ -26,7 +25,16 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context,Channel<stri
             await context.SaveChangesAsync();
         }
     }
-    
+
+    public Task<List<Category>> GetAllDeletedBefore(DateTime date)
+    {
+        var threshold = date.AddMinutes(-5);
+        return context.Categories
+            .Where(c => c.DeletedAt != null && c.DeletedAt < threshold)
+            .ToListAsync();
+    }
+
+
     public async Task Update(Category entity)
     {
         await channel.Writer.WriteAsync("Updating category");
@@ -55,7 +63,21 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context,Channel<stri
         return await context.Categories.Where(c => c.ParentCategoryId == null)
             .Include(c => c.ChildCategories).ToListAsync();
     }
-    
+
+    public async Task HardDeleteBeforeDate(DateTime date)
+    {
+        //var threshold = date.AddMinutes(-5);
+        var threshold = date.AddSeconds(-15); //Test case
+
+        var oldDeletedCategories = await context.Categories
+            .Where(c => c.DeletedAt != null && c.DeletedAt < threshold)
+            .ToListAsync();
+
+        context.Categories.RemoveRange(oldDeletedCategories);
+        await context.SaveChangesAsync();
+    }
+
+
     public async Task DeleteChildFromParent(Category parent, Category child)
     {
         await channel.Writer.WriteAsync("Trying to delete child from parent");
@@ -67,6 +89,19 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context,Channel<stri
             childCategory.ParentCategoryId = null;
             await context.SaveChangesAsync();
         }
+    }
+
+    public async Task SoftDelete(Guid id)
+    {
+        await channel.Writer.WriteAsync("Soft deleting category");
+        Category category = (await context.Categories.FindAsync(id))!;
+        category.DeletedAt = DateTime.UtcNow;
+        await context.SaveChangesAsync();
+    }
+
+    public Task HardDelete()
+    {
+        return Task.CompletedTask;
     }
 
     public async Task<Category?> GetCategoryByTitle(string title)

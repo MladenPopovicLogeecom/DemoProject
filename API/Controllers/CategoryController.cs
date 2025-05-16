@@ -63,7 +63,7 @@ public class CategoryController(ICategoryService iCategoryService, IMapper iMapp
     {
         try
         {
-            await categoryService.DeleteById(id);
+            await categoryService.SoftDelete(id);
         }
         catch (CategoryWithIdNotFoundException categoryWithIdNotFoundException)
         {
