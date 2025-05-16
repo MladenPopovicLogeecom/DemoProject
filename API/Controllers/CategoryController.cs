@@ -13,8 +13,7 @@ public class CategoryController(ICategoryService iCategoryService, IMapper iMapp
 {
     private readonly IMapper mapper = iMapper;
     private readonly ICategoryService categoryService = iCategoryService;
-
-
+    
     [HttpGet("{id}")]
     public async Task<ActionResult<Category>> GetCategoryWithId(Guid id)
     {

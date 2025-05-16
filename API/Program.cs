@@ -1,4 +1,5 @@
 using System.Threading.Channels;
+using API.Middlewares;
 using API.Validators;
 using DataEF.EntityFramework;
 using DataEF.Repositories;
@@ -15,7 +16,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 //Dependency Injection
 builder.Services.AddTransient<ICategoryService, CategoryService>();
+builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepositoryPostgre>();
+builder.Services.AddTransient<IUserRepository, UserRepositoryPostgre>();
+
 //Background process
 builder.Services.AddSingleton(Channel.CreateUnbounded<string>());
 builder.Services.AddHostedService<LoggerBackgroundService>();
@@ -37,6 +41,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // in AppSettings.json
 
 var app = builder.Build();
+
+//Middleware
+app.UseMiddleware<BasicAuthMiddleware>();
 
 app.MapControllers();
 
