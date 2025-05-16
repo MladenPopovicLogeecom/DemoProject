@@ -49,6 +49,11 @@ public class CategoryRepositoryInMemory : ICategoryRepository
         return Task.CompletedTask;
     }
 
+    public Task AddChildToParent(Category parent, Category child)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<Category?> GetById(Guid id)
     {
         return Task.FromResult(categories.FirstOrDefault(c => c.Id == id));

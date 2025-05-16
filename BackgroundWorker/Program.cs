@@ -15,7 +15,7 @@ var builder = Host.CreateDefaultBuilder(args)
 
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DBConnection")));
-        
+
         services.AddHostedService<Deleter>();
         services.AddSingleton(Channel.CreateUnbounded<string>());
         services.AddScoped<ICategoryRepository, CategoryRepositoryPostgre>();

@@ -17,38 +17,37 @@ public class CategoryService : ICategoryService
 
     public async Task Add(Category category)
     {
-        categoryBusinessValidator.EnsureCodeIsUnique(category.Code);
-        categoryBusinessValidator.EnsureTitleIsUnique(category.Title);
-
-        if (category.ParentCategoryId != null)
-        {
-            categoryBusinessValidator.EnsureIdExists(category.ParentCategoryId.Value);
-            await repository.GetById(category.ParentCategoryId.Value);
-        }
+        await categoryBusinessValidator.EnsureCodeIsUnique(category.Code);
+        await categoryBusinessValidator.EnsureTitleIsUnique(category.Title);
 
         category.Id = Guid.NewGuid();
         await repository.Add(category);
-    }
 
+        if (category.ParentCategoryId != null)
+        {
+            Category parent = await categoryBusinessValidator.EnsureIdExists(category.ParentCategoryId.Value);
+            await repository.AddChildToParent(parent, category);
+        }
+    }
 
     public async Task Update(Guid id, Category dto)
     {
-        categoryBusinessValidator.EnsureIdExists(id);
-        categoryBusinessValidator.EnsureTitleIsUnique(dto.Title);
-        Category existingCategory = (await repository.GetById(id))!;
+        Category existingCategory = await categoryBusinessValidator.EnsureIdExists(id);
+        await categoryBusinessValidator.EnsureTitleIsUnique(dto.Title);
         categoryBusinessValidator.EnsureNotSettingItselfAsParent(existingCategory, dto);
-        categoryBusinessValidator.HandleParentCategoryChange(existingCategory, dto.ParentCategoryId);
+        await categoryBusinessValidator.HandleParentCategoryChange(existingCategory, dto.ParentCategoryId);
 
         existingCategory.Title = dto.Title;
         existingCategory.Code = dto.Code;
         existingCategory.Description = dto.Description;
         existingCategory.ParentCategoryId = dto.ParentCategoryId;
+        await repository.Update(existingCategory);
+        
     }
 
     public async Task<Category> GetById(Guid id)
     {
-        categoryBusinessValidator.EnsureIdExists(id);
-        return (await repository.GetById(id))!;
+        return await categoryBusinessValidator.EnsureIdExists(id);
     }
 
     public async Task<List<Category>> GetAll()
@@ -78,13 +77,11 @@ public class CategoryService : ICategoryService
     //So i made method with shared logic, just for the cleaner code.
     private async Task<Category> DeleteLogic(Guid id)
     {
-        categoryBusinessValidator.EnsureIdExists(id);
-        Category category = (await repository.GetById(id))!;
+        Category category = await categoryBusinessValidator.EnsureIdExists(id);
         categoryBusinessValidator.EnsureCategoryHasNoChildren(category);
         if (category.ParentCategoryId != null)
         {
-            categoryBusinessValidator.EnsureIdExists(category.ParentCategoryId.Value);
-            Category parent = repository.GetById(category.ParentCategoryId.Value).GetAwaiter().GetResult()!;
+            Category parent = await categoryBusinessValidator.EnsureIdExists(category.ParentCategoryId.Value);
             await repository.DeleteChildFromParent(parent, category);
         }
 

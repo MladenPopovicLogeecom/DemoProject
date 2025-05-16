@@ -8,6 +8,7 @@ public interface ICategoryRepository : IRepository<Category>
     Task HardDeleteBeforeDate(DateTime date);
     Task SoftDelete(Guid id);
     Task DeleteChildFromParent(Category parent, Category child);
+    Task AddChildToParent(Category parent, Category child);
     Task<Category?> GetCategoryByTitle(string title);
     Task<Category?> GetCategoryByCode(string code);
     

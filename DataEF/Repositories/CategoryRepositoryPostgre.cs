@@ -11,7 +11,7 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context, Channel<str
     public async Task Add(Category entity)
     {
         await channel.Writer.WriteAsync("Adding category");
-        await context.Categories.AddAsync(entity);
+        context.Categories.Add(entity);
         await context.SaveChangesAsync();
     }
 
@@ -26,10 +26,10 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context, Channel<str
         }
     }
 
-    public Task<List<Category>> GetAllDeletedBefore(DateTime date)
+    public async Task<List<Category>> GetAllDeletedBefore(DateTime date)
     {
         var threshold = date.AddMinutes(-5);
-        return context.Categories
+        return await context.Categories
             .Where(c => c.DeletedAt != null && c.DeletedAt < threshold)
             .ToListAsync();
     }
@@ -47,23 +47,29 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context, Channel<str
         await channel.Writer.WriteAsync("Getting category by id");
         return await context.Categories
             .Include(c => c.ChildCategories)
-            .FirstOrDefaultAsync(c => c.Id == id);
+            .FirstOrDefaultAsync(c => c.Id == id && c.DeletedAt == null);
     }
+
 
     public async Task<List<Category>> GetAll()
     {
         await channel.Writer.WriteAsync("Getting all categories");
-        return await context.Categories.Include(c => c.ChildCategories)
+        return await context.Categories
+            .Where(c => c.DeletedAt == null)
+            .Include(c => c.ChildCategories)
             .ToListAsync();
     }
+
 
     public async Task<List<Category>> GetAllParents()
     {
         await channel.Writer.WriteAsync("Getting all parent categories");
-        return await context.Categories.Where(c => c.ParentCategoryId == null)
-            .Include(c => c.ChildCategories).ToListAsync();
+        return await context.Categories
+            .Where(c => c.ParentCategoryId == null && c.DeletedAt == null)
+            .Include(c => c.ChildCategories)
+            .ToListAsync();
     }
-
+    
     public async Task HardDeleteBeforeDate(DateTime date)
     {
         //var threshold = date.AddMinutes(-5);
@@ -76,8 +82,7 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context, Channel<str
         context.Categories.RemoveRange(oldDeletedCategories);
         await context.SaveChangesAsync();
     }
-
-
+    
     public async Task DeleteChildFromParent(Category parent, Category child)
     {
         await channel.Writer.WriteAsync("Trying to delete child from parent");
@@ -90,6 +95,23 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context, Channel<str
             await context.SaveChangesAsync();
         }
     }
+
+    public async Task AddChildToParent(Category parent, Category child)
+    {
+        await channel.Writer.WriteAsync("Trying to add child to parent");
+
+        var parentCategory = await context.Categories
+            .FirstOrDefaultAsync(c => c.Id == parent.Id && c.DeletedAt == null);
+
+        var childCategory = await context.Categories
+            .FirstOrDefaultAsync(c => c.Id == child.Id && c.DeletedAt == null);
+
+        //Checked in service, it will not be null;
+        childCategory!.ParentCategoryId = parentCategory!.Id;
+        await context.SaveChangesAsync();
+        
+    }
+
 
     public async Task SoftDelete(Guid id)
     {
@@ -108,13 +130,15 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context, Channel<str
     {
         await channel.Writer.WriteAsync("Getting category by title");
         return await context.Categories
-            .FirstOrDefaultAsync(c => c.Title == title);
+            .FirstOrDefaultAsync(c => c.Title == title && c.DeletedAt == null);
     }
+
 
     public async Task<Category?> GetCategoryByCode(string code)
     {
         await channel.Writer.WriteAsync("Getting category by Code");
         return await context.Categories
-            .FirstOrDefaultAsync(c => c.Code == code);
+            .FirstOrDefaultAsync(c => c.Code == code && c.DeletedAt == null);
     }
+
 }

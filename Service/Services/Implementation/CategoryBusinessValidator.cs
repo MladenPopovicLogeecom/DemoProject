@@ -6,28 +6,31 @@ namespace Service.Services.Implementation;
 
 public class CategoryBusinessValidator(ICategoryRepository repository)
 {
-    public void EnsureCodeIsUnique(string code)
+    public async Task EnsureCodeIsUnique(string code)
     {
-        if (repository.GetCategoryByCode(code).GetAwaiter().GetResult() != null)
+        if (await repository.GetCategoryByCode(code) != null)
         {
             throw new CategoryCodeIsNotUniqueException(code);
         }
     }
 
-    public void EnsureTitleIsUnique(string title)
+    public async Task EnsureTitleIsUnique(string title)
     {
-        if (repository.GetCategoryByTitle(title).GetAwaiter().GetResult() != null)
+        if (await repository.GetCategoryByTitle(title) != null)
         {
             throw new CategoryTitleIsNotUniqueException(title);
         }
     }
 
-    public void EnsureIdExists(Guid id)
+    public async Task<Category> EnsureIdExists(Guid id)
     {
-        if (repository.GetById(id).GetAwaiter().GetResult() == null)
+        Category? category = await repository.GetById(id);
+        if (category == null)
         {
             throw new CategoryWithIdNotFoundException(id);
         }
+
+        return category;
     }
 
     public void EnsureCategoryHasNoChildren(Category category)
@@ -46,7 +49,7 @@ public class CategoryBusinessValidator(ICategoryRepository repository)
         }
     }
 
-    public void HandleParentCategoryChange(Category category, Guid? newParentId)
+    public async Task HandleParentCategoryChange(Category category, Guid? newParentId)
     {
         if (category.ParentCategoryId == newParentId)
         {
@@ -55,13 +58,13 @@ public class CategoryBusinessValidator(ICategoryRepository repository)
 
         if (category.ParentCategoryId.HasValue)
         {
-            Category oldParent = repository.GetById(category.ParentCategoryId.Value).GetAwaiter().GetResult()!;
+            Category oldParent = (await repository.GetById(category.ParentCategoryId.Value))!;
             oldParent.ChildCategories.Remove(category);
         }
 
         if (newParentId.HasValue)
         {
-            Category newParent = repository.GetById(newParentId.Value).GetAwaiter().GetResult()!;
+            Category newParent = (await repository.GetById(newParentId.Value))!;
             newParent.ChildCategories.Add(category);
         }
 
