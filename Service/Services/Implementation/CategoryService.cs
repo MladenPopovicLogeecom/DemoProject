@@ -42,9 +42,8 @@ public class CategoryService : ICategoryService
         existingCategory.Description = dto.Description;
         existingCategory.ParentCategoryId = dto.ParentCategoryId;
         await repository.Update(existingCategory);
-        
     }
-
+    
     public async Task<Category> GetById(Guid id)
     {
         return await categoryBusinessValidator.EnsureIdExists(id);
@@ -59,22 +58,13 @@ public class CategoryService : ICategoryService
     {
         return await repository.GetAllParents();
     }
-
-    public async Task HardDeleteById(Guid id)
-    {
-        Category cat = await DeleteLogic(id);
-        await repository.HardDelete(cat.Id!.Value);
-    }
-
+    
     public async Task SoftDelete(Guid id)
     {
         Category cat = await DeleteLogic(id);
         await repository.SoftDelete(cat.Id!.Value);
     }
-
-    //We have soft delete and hard delete. Currently, we are using only soft delete.
-    //But i don't want to delete hard delete method in case we need it later.
-    //So i made method with shared logic, just for the cleaner code.
+    
     private async Task<Category> DeleteLogic(Guid id)
     {
         Category category = await categoryBusinessValidator.EnsureIdExists(id);

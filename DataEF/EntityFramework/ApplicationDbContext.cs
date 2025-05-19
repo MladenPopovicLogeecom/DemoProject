@@ -10,7 +10,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        //mapping
         modelBuilder.Entity<Category>()
             .ToTable("Categories")
             .HasMany(c => c.ChildCategories)

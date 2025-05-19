@@ -1,4 +1,3 @@
-using System.Threading.Channels;
 using API.Middlewares;
 using API.Validators;
 using DataEF.EntityFramework;
@@ -19,9 +18,9 @@ builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepositoryPostgre>();
 builder.Services.AddTransient<IUserRepository, UserRepositoryPostgre>();
+builder.Services.AddSingleton<MessageChannel>();
 
 //Background process
-builder.Services.AddSingleton(Channel.CreateUnbounded<string>());
 builder.Services.AddHostedService<LoggerBackgroundService>();
 
 
