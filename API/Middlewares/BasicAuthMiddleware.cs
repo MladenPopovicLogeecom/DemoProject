@@ -1,7 +1,5 @@
 ﻿using System.Net;
 using System.Text;
-using Microsoft.AspNetCore.Http;
-using Service.Exceptions.CategoryExceptions;
 using Service.Exceptions.UserExceptions;
 using Service.Services.Interfaces;
 
@@ -29,7 +27,7 @@ public class BasicAuthMiddleware(RequestDelegate next)
 
                         try
                         {
-                            await userService.CheckCredentials(username, password);
+                            await userService.BasicAuthentification(username, password);
                             
                         }
                         catch (UserWithUsernameDoesNotExist userwithUsernameExists)
@@ -56,6 +54,6 @@ public class BasicAuthMiddleware(RequestDelegate next)
 
         context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
         context.Response.Headers["WWW-Authenticate"] = "Basic";
-        await context.Response.WriteAsync("Unauthorized");
+        await context.Response.WriteAsync("Basic Authentification:Unauthorized");
     }
 }

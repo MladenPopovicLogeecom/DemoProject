@@ -2,7 +2,7 @@
 using Service.Entities;
 using Service.Exceptions.CategoryExceptions;
 
-namespace Service.Services.Implementation;
+namespace Service.BusinessValidators;
 
 public class CategoryBusinessValidator(ICategoryRepository repository)
 {

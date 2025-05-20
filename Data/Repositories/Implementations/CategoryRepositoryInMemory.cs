@@ -13,17 +13,17 @@ public class CategoryRepositoryInMemory : ICategoryRepository
         return Task.CompletedTask;
     }
 
-    public Task Update(Category category)
+    public async Task Update(Category category)
     {
         int index = categories.FindIndex(c => c.Id == category.Id);
         categories[index] = category;
-        return Task.CompletedTask;
+        
     }
 
-    public Task<List<Category>> GetAllParents()
+    public async Task<List<Category>> GetAllParents()
     {
-        var parents = categories.Where(c => c.ParentCategoryId == null).ToList();
-        return Task.FromResult(parents);
+        List<Category> parents = categories.Where(c => c.ParentCategoryId == null).ToList();
+        return parents;
     }
 
     public Task HardDeleteBeforeDate(DateTime date, double threshold)

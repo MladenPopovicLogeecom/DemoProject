@@ -9,6 +9,7 @@ using Service.BackgroundServices;
 using Service.Contracts.Repository;
 using Service.Services.Implementation;
 using Service.Services.Interfaces;
+using Service.Services.JWT;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,7 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepositoryPostgre>();
 builder.Services.AddTransient<IUserRepository, UserRepositoryPostgre>();
 builder.Services.AddSingleton<MessageChannel>();
+builder.Services.AddTransient<JwtHelper>();
 
 //Background process
 builder.Services.AddHostedService<LoggerBackgroundService>();
@@ -39,10 +41,23 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DBConnection")));
 // in AppSettings.json
 
+//Security
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options => { });
+
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 //Middleware
-app.UseMiddleware<BasicAuthMiddleware>();
+//app.UseMiddleware<BasicAuthMiddleware>();
+app.UseMiddleware<JwtAuthentificationMiddleware>();
+app.UseMiddleware<JwtAuthorizationMiddleware>();
+
+//Security
+app.UseAuthorization();
+app.UseAuthorization();
+
 
 app.MapControllers();
 
