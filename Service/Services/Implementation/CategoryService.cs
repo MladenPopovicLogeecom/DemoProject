@@ -5,16 +5,9 @@ using Service.Services.Interfaces;
 
 namespace Service.Services.Implementation;
 
-public class CategoryService : ICategoryService
+public class CategoryService(ICategoryRepository repository, CategoryBusinessValidator categoryBusinessValidator) : ICategoryService
 {
-    private readonly ICategoryRepository repository;
-    private readonly CategoryBusinessValidator categoryBusinessValidator;
 
-    public CategoryService(ICategoryRepository iCategoryRepository)
-    {
-        repository = iCategoryRepository;
-        categoryBusinessValidator = new CategoryBusinessValidator(repository);
-    }
 
     public async Task Add(Category category)
     {
@@ -63,13 +56,14 @@ public class CategoryService : ICategoryService
     public async Task SoftDelete(Guid id)
     {
         Category cat = await DeleteLogic(id);
-        await repository.SoftDelete(cat.Id!.Value);
+        await repository.SoftDelete(cat.Id);
     }
     
     private async Task<Category> DeleteLogic(Guid id)
     {
         Category category = await categoryBusinessValidator.EnsureIdExists(id);
         categoryBusinessValidator.EnsureCategoryHasNoChildren(category);
+        categoryBusinessValidator.EnsureCategoryHasNoProducts(category);
         if (category.ParentCategoryId != null)
         {
             Category parent = await categoryBusinessValidator.EnsureIdExists(category.ParentCategoryId.Value);

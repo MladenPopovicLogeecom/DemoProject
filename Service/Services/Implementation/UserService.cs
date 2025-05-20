@@ -8,7 +8,7 @@ namespace Service.Services.Implementation;
 
 public class UserService(IUserRepository userRepository, JwtHelper jwtHelper) : IUserService
 {
-    public async Task<User> BasicAuthentification(string username, string password)
+    public async Task<User> BasicAuthentication(string username, string password)
     {
         User? user = await userRepository.GetUserByUsername(username);
         if (user == null)
@@ -29,7 +29,7 @@ public class UserService(IUserRepository userRepository, JwtHelper jwtHelper) : 
         return await userRepository.GetUserByToken(token);
     }
 
-    public async Task<string> JwtAuthentification(string username, string password)
+    public async Task<string> JwtAuthentication(string username, string password)
     {
         User? user = await userRepository.GetUserByUsername(username);
         if (user == null)

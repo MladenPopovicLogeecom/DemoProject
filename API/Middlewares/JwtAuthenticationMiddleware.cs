@@ -1,11 +1,10 @@
 ﻿using System.Net;
-using Service.Entities;
 using Service.Services.Interfaces;
-using Service.Services.JWT; // <- assuming your JwtHelper is here
+using Service.Services.JWT;
 
 namespace API.Middlewares;
 
-public class JwtAuthentificationMiddleware(RequestDelegate next)
+public class JwtAuthenticationMiddleware(RequestDelegate next)
 {
     public async Task InvokeAsync(HttpContext context, IUserService userService, JwtHelper jwtHelper)
     {

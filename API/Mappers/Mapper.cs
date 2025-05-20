@@ -1,4 +1,5 @@
 ﻿using API.DTOs.CategoryDTOs;
+using API.DTOs.ProductDTOs;
 using AutoMapper;
 using Service.Entities;
 
@@ -10,5 +11,6 @@ public class Mapper : Profile
     public Mapper()
     {
         CreateMap<CategoryDto, Category>();
+        CreateMap<ProductDto, Product>();
     }
 }

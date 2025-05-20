@@ -15,7 +15,7 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context, MessageChan
         context.Categories.Add(entity);
         await context.SaveChangesAsync();
     }
-    
+
     public async Task Update(Category entity)
     {
         messageChannel.AddMessage("Updating category");
@@ -53,7 +53,7 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context, MessageChan
     public async Task HardDeleteBeforeDate(DateTime date, double threshold)
     {
         var threshold2 = date.AddMinutes(-threshold);
-        
+
         var oldDeletedCategories = await context.Categories
             .Where(c => c.DeletedAt != null && c.DeletedAt < threshold2)
             .ToListAsync();

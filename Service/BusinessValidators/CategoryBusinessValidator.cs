@@ -4,11 +4,11 @@ using Service.Exceptions.CategoryExceptions;
 
 namespace Service.BusinessValidators;
 
-public class CategoryBusinessValidator(ICategoryRepository repository)
+public class CategoryBusinessValidator(ICategoryRepository categoryRepository, IProductRepository productRepository)
 {
     public async Task EnsureCodeIsUnique(string code)
     {
-        if (await repository.GetCategoryByCode(code) != null)
+        if (await categoryRepository.GetCategoryByCode(code) != null)
         {
             throw new CategoryCodeIsNotUniqueException(code);
         }
@@ -16,7 +16,7 @@ public class CategoryBusinessValidator(ICategoryRepository repository)
 
     public async Task EnsureTitleIsUnique(string title)
     {
-        if (await repository.GetCategoryByTitle(title) != null)
+        if (await categoryRepository.GetCategoryByTitle(title) != null)
         {
             throw new CategoryTitleIsNotUniqueException(title);
         }
@@ -24,7 +24,7 @@ public class CategoryBusinessValidator(ICategoryRepository repository)
 
     public async Task<Category> EnsureIdExists(Guid id)
     {
-        Category? category = await repository.GetById(id);
+        Category? category = await categoryRepository.GetById(id);
         if (category == null)
         {
             throw new CategoryWithIdNotFoundException(id);
@@ -35,9 +35,16 @@ public class CategoryBusinessValidator(ICategoryRepository repository)
 
     public void EnsureCategoryHasNoChildren(Category category)
     {
-        if (category.ChildCategories != null && category.ChildCategories!.Any())
+        if (category.ChildCategories != null && category.ChildCategories.Any())
         {
             throw new CategoryHasChildrenException(category.Title);
+        }
+    }   
+    public void EnsureCategoryHasNoProducts(Category category)
+    {
+        if (productRepository.ExistsByCategoryId(category.Id))
+        {
+            throw new CategoryHasProductsException(category.Title);
         }
     }
 
@@ -58,13 +65,13 @@ public class CategoryBusinessValidator(ICategoryRepository repository)
 
         if (category.ParentCategoryId.HasValue)
         {
-            Category oldParent = (await repository.GetById(category.ParentCategoryId.Value))!;
+            Category oldParent = (await categoryRepository.GetById(category.ParentCategoryId.Value))!;
             oldParent.ChildCategories.Remove(category);
         }
 
         if (newParentId.HasValue)
         {
-            Category newParent = (await repository.GetById(newParentId.Value))!;
+            Category newParent = (await categoryRepository.GetById(newParentId.Value))!;
             newParent.ChildCategories.Add(category);
         }
 

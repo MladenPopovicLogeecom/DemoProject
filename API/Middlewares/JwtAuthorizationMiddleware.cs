@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Security.Claims;
-using Service.Entities;
 using Service.Entities.Enums;
 using Service.Services.Interfaces;
 

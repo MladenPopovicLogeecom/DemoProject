@@ -27,10 +27,10 @@ public class BasicAuthMiddleware(RequestDelegate next)
 
                         try
                         {
-                            await userService.BasicAuthentification(username, password);
+                            await userService.BasicAuthentication(username, password);
                             
                         }
-                        catch (UserWithUsernameDoesNotExist userwithUsernameExists)
+                        catch (UserWithUsernameDoesNotExist userWithUsernameExists)
                         {
                             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                             await context.Response.WriteAsync("User with that username does not exist.");
@@ -45,15 +45,17 @@ public class BasicAuthMiddleware(RequestDelegate next)
                         
                     }
                 }
-                catch
+                catch (Exception exception)
                 {
-                    
+                    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    await context.Response.WriteAsync(exception.Message);
+                    return;
                 }
             }
         }
 
         context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
         context.Response.Headers["WWW-Authenticate"] = "Basic";
-        await context.Response.WriteAsync("Basic Authentification:Unauthorized");
+        await context.Response.WriteAsync("Basic Authentication:Unauthorized");
     }
 }
