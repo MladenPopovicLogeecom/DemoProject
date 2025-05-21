@@ -10,12 +10,8 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("category")]
-public class CategoryController(ICategoryService iCategoryService, IMapper iMapper) : ControllerBase
+public class CategoryController(ICategoryService categoryService, IMapper mapper) : ControllerBase
 {
-    private readonly IMapper mapper = iMapper;
-    private readonly ICategoryService categoryService = iCategoryService;
-
-
     [HttpGet("{id}")]
     public async Task<ActionResult<Category>> GetCategoryWithId(Guid id)
     {

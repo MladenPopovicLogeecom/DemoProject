@@ -72,21 +72,4 @@ public class CategoryService(ICategoryRepository repository, CategoryBusinessVal
 
         return category;
     }
-
-    public Task SeedDatabase()
-    {
-        for (var i = 0; i < 3; i++)
-        {
-            Category cat = new Category("Title " + i, "Code " + i,
-                "Description " + i,
-                null, null)
-            {
-                Id = Guid.Empty
-            };
-
-            repository.Add(cat);
-        }
-
-        return Task.CompletedTask;
-    }
 }
