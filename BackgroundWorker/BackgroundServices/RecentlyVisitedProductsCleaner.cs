@@ -17,8 +17,8 @@ public class RecentlyVisitedProductsCleaner(IServiceScopeFactory scopeFactory) :
             {
                 Console.WriteLine("[ProductVisitedAtCleaner] Unflagging recent products.");
 
-                using var scope = scopeFactory.CreateScope();
-                var repository = scope.ServiceProvider.GetRequiredService<IProductRepository>();
+                using IServiceScope scope = scopeFactory.CreateScope();
+                IProductRepository repository = scope.ServiceProvider.GetRequiredService<IProductRepository>();
 
                 await repository.CleanRecentlyVisitedProducts();
             }

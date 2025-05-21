@@ -24,7 +24,7 @@ public class CategoryBusinessValidator(ICategoryRepository categoryRepository, I
 
     public async Task<Category> EnsureCategoryExists(Guid id)
     {
-        var category = await categoryRepository.GetById(id);
+        Category? category = await categoryRepository.GetById(id);
         if (category == null)
         {
             throw new CategoryWithIdNotFoundException(id);
@@ -66,13 +66,13 @@ public class CategoryBusinessValidator(ICategoryRepository categoryRepository, I
 
         if (category.ParentCategoryId.HasValue)
         {
-            var oldParent = (await categoryRepository.GetById(category.ParentCategoryId.Value))!;
+            Category oldParent = (await categoryRepository.GetById(category.ParentCategoryId.Value))!;
             oldParent.ChildCategories.Remove(category);
         }
 
         if (newParentId.HasValue)
         {
-            var newParent = (await categoryRepository.GetById(newParentId.Value))!;
+            Category newParent = (await categoryRepository.GetById(newParentId.Value))!;
             newParent.ChildCategories.Add(category);
         }
 

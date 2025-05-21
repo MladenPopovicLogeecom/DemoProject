@@ -29,7 +29,7 @@ public class ProductService(
 
     public async Task<Product> GetById(Guid id)
     {
-        var product = await productBusinessValidator.EnsureProductExists(id);
+        Product product = await productBusinessValidator.EnsureProductExists(id);
 
         product.VisitedAt = DateTime.UtcNow;
         product.ViewCount += 1;

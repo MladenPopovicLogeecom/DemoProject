@@ -36,7 +36,7 @@ public class Product
     public bool IsFeatured { get; set; }
     public int ViewCount { get; set; }
     public DateTime? VisitedAt { get; set; }
-    
+
     public void ApplyUpdatesFrom(Product source)
     {
         Sku = source.Sku;
@@ -49,5 +49,4 @@ public class Product
         IsEnabled = source.IsEnabled;
         IsFeatured = source.IsFeatured;
     }
-
 }

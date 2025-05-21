@@ -1,4 +1,6 @@
 ﻿using System.Net;
+using System.Security.Claims;
+using Service.Entities;
 using Service.Services.Interfaces;
 using Service.Services.JWT;
 
@@ -15,8 +17,8 @@ public class JwtAuthenticationMiddleware(RequestDelegate next)
             return;
         }
 
-        var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
-        var token = authHeader?.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase) == true
+        string? authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+        string? token = authHeader?.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase) == true
             ? authHeader.Substring("Bearer ".Length).Trim()
             : null;
 
@@ -28,7 +30,7 @@ public class JwtAuthenticationMiddleware(RequestDelegate next)
             return;
         }
 
-        var user = await userService.GetUserByToken(token);
+        User? user = await userService.GetUserByToken(token);
         if (user == null)
         {
             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
@@ -37,7 +39,7 @@ public class JwtAuthenticationMiddleware(RequestDelegate next)
             return;
         }
 
-        var principal = jwtHelper.ValidateToken(token);
+        ClaimsPrincipal? principal = jwtHelper.ValidateToken(token);
         if (principal == null)
         {
             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;

@@ -31,7 +31,7 @@ public class ProductRepositoryPostgre(ApplicationDbContext context) : IProductRe
 
     public async Task Delete(Guid id)
     {
-        var product = await context.Products.FindAsync(id);
+        Product? product = await context.Products.FindAsync(id);
         if (product != null)
         {
             context.Products.Remove(product);
@@ -61,7 +61,7 @@ public class ProductRepositoryPostgre(ApplicationDbContext context) : IProductRe
             .Where(p => p.VisitedAt != null)
             .ToListAsync();
 
-        foreach (var product in productsWithVisitedAt) product.VisitedAt = null;
+        foreach (Product? product in productsWithVisitedAt) product.VisitedAt = null;
         await context.SaveChangesAsync();
     }
 

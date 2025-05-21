@@ -52,7 +52,7 @@ public class ProductController(IProductService productService, IMapper mapper) :
     [HttpPost]
     public async Task<ActionResult> Add(ProductDto dto)
     {
-        var newProduct = mapper.Map<Product>(dto);
+        Product? newProduct = mapper.Map<Product>(dto);
         try
         {
             await productService.Add(newProduct);
@@ -68,7 +68,7 @@ public class ProductController(IProductService productService, IMapper mapper) :
     [HttpPut("{id}")]
     public async Task<ActionResult> Update(ProductDto dto, Guid id)
     {
-        var newProduct = mapper.Map<Product>(dto);
+        Product? newProduct = mapper.Map<Product>(dto);
         try
         {
             await productService.Update(id, newProduct);

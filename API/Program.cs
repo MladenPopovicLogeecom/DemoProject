@@ -12,7 +12,7 @@ using Service.Services.Implementation;
 using Service.Services.Interfaces;
 using Service.Services.JWT;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
 //Dependency Injection
 builder.Services.AddTransient<ICategoryService, CategoryService>();
@@ -50,7 +50,7 @@ builder.Services.AddAuthentication("Bearer")
 
 builder.Services.AddAuthorization();
 
-var app = builder.Build();
+WebApplication? app = builder.Build();
 
 //Middleware
 //app.UseMiddleware<BasicAuthMiddleware>();

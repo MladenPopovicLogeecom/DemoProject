@@ -10,7 +10,7 @@ public class UserService(IUserRepository userRepository, JwtHelper jwtHelper) : 
 {
     public async Task<User> AuthenticateBasic(string username, string password)
     {
-        var user = await userRepository.GetUserByUsername(username);
+        User? user = await userRepository.GetUserByUsername(username);
         if (user == null)
         {
             throw new UserWithUsernameDoesNotExistException(username);
@@ -31,7 +31,7 @@ public class UserService(IUserRepository userRepository, JwtHelper jwtHelper) : 
 
     public async Task<string> GenerateToken(string username, string password)
     {
-        var user = await userRepository.GetUserByUsername(username);
+        User? user = await userRepository.GetUserByUsername(username);
         if (user == null)
         {
             throw new UserWithUsernameDoesNotExistException(username);
@@ -44,7 +44,7 @@ public class UserService(IUserRepository userRepository, JwtHelper jwtHelper) : 
 
         if (user.Token == null)
         {
-            var token = jwtHelper.GenerateToken(user);
+            string token = jwtHelper.GenerateToken(user);
             user.Token = token;
             await userRepository.UpdateUser(user);
         }

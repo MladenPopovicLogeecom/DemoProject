@@ -16,7 +16,7 @@ public class CategoryRepositoryInMemory : ICategoryRepository
 
     public Task Update(Category category)
     {
-        var index = categories.FindIndex(c => c.Id == category.Id);
+        int index = categories.FindIndex(c => c.Id == category.Id);
         categories[index] = category;
 
         return Task.CompletedTask;

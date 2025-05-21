@@ -3,14 +3,14 @@ using FluentMigrator.Runner;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-var configuration = new ConfigurationBuilder()
+IConfigurationRoot configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", false, true)
     .Build();
 
-var connectionString = configuration.GetConnectionString("DBConnection");
+string? connectionString = configuration.GetConnectionString("DBConnection");
 
-var serviceProvider = new ServiceCollection()
+ServiceProvider serviceProvider = new ServiceCollection()
     .AddFluentMigratorCore()
     .ConfigureRunner(rb => rb
         .AddPostgres()
@@ -19,8 +19,8 @@ var serviceProvider = new ServiceCollection()
     .AddLogging(lb => lb.AddFluentMigratorConsole())
     .BuildServiceProvider();
 
-using (var scope = serviceProvider.CreateScope())
+using (IServiceScope scope = serviceProvider.CreateScope())
 {
-    var runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
+    IMigrationRunner runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
     runner.MigrateUp();
 }

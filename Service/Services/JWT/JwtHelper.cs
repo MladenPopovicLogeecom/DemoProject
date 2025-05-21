@@ -11,17 +11,17 @@ public class JwtHelper(IConfiguration config)
 {
     public string GenerateToken(User user)
     {
-        var claims = new[]
+        Claim[] claims = new[]
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()!),
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Role, user.Role.ToString())
         };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtSettings:Secret"]!));
-        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(config["JwtSettings:Secret"]!));
+        SigningCredentials credentials = new(key, SecurityAlgorithms.HmacSha256);
 
-        var token = new JwtSecurityToken(
+        JwtSecurityToken token = new(
             claims: claims,
             signingCredentials: credentials);
 
@@ -32,10 +32,10 @@ public class JwtHelper(IConfiguration config)
     {
         try
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(config["JwtSettings:Secret"]!);
+            JwtSecurityTokenHandler tokenHandler = new();
+            byte[] key = Encoding.UTF8.GetBytes(config["JwtSettings:Secret"]!);
 
-            var validationParameters = new TokenValidationParameters
+            TokenValidationParameters validationParameters = new()
             {
                 ValidateIssuer = false,
                 ValidateAudience = false,
@@ -44,7 +44,8 @@ public class JwtHelper(IConfiguration config)
                 IssuerSigningKey = new SymmetricSecurityKey(key)
             };
 
-            var principal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
+            ClaimsPrincipal? principal =
+                tokenHandler.ValidateToken(token, validationParameters, out SecurityToken? validatedToken);
 
             if (validatedToken is JwtSecurityToken jwtToken &&
                 jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))

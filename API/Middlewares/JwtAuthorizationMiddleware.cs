@@ -16,7 +16,7 @@ public class JwtAuthorizationMiddleware(RequestDelegate next)
             return;
         }
 
-        var roleClaim = context.User.FindFirst(ClaimTypes.Role)?.Value;
+        string? roleClaim = context.User.FindFirst(ClaimTypes.Role)?.Value;
 
         if (!string.Equals(roleClaim, Role.Admin.ToString(), StringComparison.OrdinalIgnoreCase))
         {
@@ -32,8 +32,8 @@ public class JwtAuthorizationMiddleware(RequestDelegate next)
     //All GET routes are allowed for everyone, we don't need auth check
     private bool IgnoreSomeRoutes(HttpContext context)
     {
-        var path = context.Request.Path.Value?.TrimEnd('/') ?? "";
-        var method = context.Request.Method;
+        string? path = context.Request.Path.Value?.TrimEnd('/') ?? "";
+        string? method = context.Request.Method;
 
         if (method.Equals("GET", StringComparison.OrdinalIgnoreCase))
         {
@@ -46,7 +46,7 @@ public class JwtAuthorizationMiddleware(RequestDelegate next)
             // GET /category/{guid}
             if (path.StartsWith("/category/", StringComparison.OrdinalIgnoreCase))
             {
-                var remainder = path["/category/".Length..];
+                string? remainder = path["/category/".Length..];
 
                 if (!remainder.Contains("/") && Guid.TryParse(remainder, out _))
                 {

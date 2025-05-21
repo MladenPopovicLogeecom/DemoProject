@@ -8,10 +8,10 @@ using Microsoft.Extensions.Hosting;
 using Service.BackgroundServices;
 using Service.Contracts.Repository;
 
-var builder = Host.CreateDefaultBuilder(args)
+IHostBuilder? builder = Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostContext, services) =>
     {
-        var configuration = hostContext.Configuration;
+        IConfiguration? configuration = hostContext.Configuration;
 
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DBConnection")));
@@ -25,6 +25,6 @@ var builder = Host.CreateDefaultBuilder(args)
         services.AddTransient<IProductRepository, ProductRepositoryPostgre>();
     });
 
-var app = builder.Build();
+IHost? app = builder.Build();
 
 await app.RunAsync();

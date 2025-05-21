@@ -16,8 +16,8 @@ public class CategoryDeleter(IServiceScopeFactory scopeFactory) : BackgroundServ
             {
                 Console.WriteLine("[Deleter] Hard deleting categories");
 
-                using var scope = scopeFactory.CreateScope();
-                var repository = scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
+                using IServiceScope? scope = scopeFactory.CreateScope();
+                ICategoryRepository? repository = scope.ServiceProvider.GetRequiredService<ICategoryRepository>();
 
                 await repository.HardDeleteBeforeDate(DateTime.UtcNow, -5);
             }

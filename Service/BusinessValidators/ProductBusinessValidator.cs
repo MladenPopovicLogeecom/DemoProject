@@ -8,7 +8,7 @@ public class ProductBusinessValidator(IProductRepository repository)
 {
     public async Task<Product> EnsureProductExists(Guid id)
     {
-        var product = await repository.GetById(id);
+        Product? product = await repository.GetById(id);
         if (product == null)
         {
             throw new ProductWithIdNotFoundException(id);

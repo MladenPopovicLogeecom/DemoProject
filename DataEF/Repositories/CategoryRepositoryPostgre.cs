@@ -54,9 +54,9 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context, MessageChan
 
     public async Task HardDeleteBeforeDate(DateTime date, double threshold)
     {
-        var threshold2 = date.AddMinutes(-threshold);
+        DateTime threshold2 = date.AddMinutes(-threshold);
 
-        var oldDeletedCategories = await context.Categories
+        List<Category>? oldDeletedCategories = await context.Categories
             .Where(c => c.DeletedAt != null && c.DeletedAt < threshold2)
             .ToListAsync();
 
@@ -67,7 +67,7 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context, MessageChan
     public async Task DeleteChildFromParent(Category parent, Category child)
     {
         messageChannel.AddMessage("Trying to delete child from parent");
-        var childCategory = await context.Categories
+        Category? childCategory = await context.Categories
             .FirstOrDefaultAsync(c => c.Id == child.Id && c.ParentCategoryId == parent.Id);
 
         if (childCategory != null)
@@ -81,10 +81,10 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context, MessageChan
     {
         messageChannel.AddMessage("Trying to add child to parent");
 
-        var parentCategory = await context.Categories
+        Category? parentCategory = await context.Categories
             .FirstOrDefaultAsync(c => c.Id == parent.Id && c.DeletedAt == null);
 
-        var childCategory = await context.Categories
+        Category? childCategory = await context.Categories
             .FirstOrDefaultAsync(c => c.Id == child.Id && c.DeletedAt == null);
 
         //Checked in service, it will not be null;
@@ -95,7 +95,7 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context, MessageChan
     public async Task SoftDelete(Guid id)
     {
         messageChannel.AddMessage("Soft deleting category");
-        var category = (await context.Categories.FindAsync(id))!;
+        Category? category = (await context.Categories.FindAsync(id))!;
         category.DeletedAt = DateTime.UtcNow;
         await context.SaveChangesAsync();
     }
