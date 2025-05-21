@@ -14,9 +14,9 @@ public class UserController(IUserService userService) : ControllerBase
     {
         try
         {
-            return Ok(await userService.JwtAuthentication(loginDto.Username, loginDto.Password));
+            return Ok(await userService.GenerateToken(loginDto.Username, loginDto.Password));
         }
-        catch (Exception ex) when (ex is UserWithUsernameDoesNotExist || ex is WrongPasswordException)
+        catch (Exception ex) when (ex is UserWithUsernameDoesNotExistException || ex is WrongPasswordException)
         {
             return Unauthorized("Invalid username or password");
         }

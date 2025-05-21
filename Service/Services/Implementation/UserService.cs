@@ -8,12 +8,12 @@ namespace Service.Services.Implementation;
 
 public class UserService(IUserRepository userRepository, JwtHelper jwtHelper) : IUserService
 {
-    public async Task<User> BasicAuthentication(string username, string password)
+    public async Task<User> AuthenticateBasic(string username, string password)
     {
         User? user = await userRepository.GetUserByUsername(username);
         if (user == null)
         {
-            throw new UserWithUsernameDoesNotExist(username);
+            throw new UserWithUsernameDoesNotExistException(username);
         }
 
         if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
@@ -29,12 +29,12 @@ public class UserService(IUserRepository userRepository, JwtHelper jwtHelper) : 
         return await userRepository.GetUserByToken(token);
     }
 
-    public async Task<string> JwtAuthentication(string username, string password)
+    public async Task<string> GenerateToken(string username, string password)
     {
         User? user = await userRepository.GetUserByUsername(username);
         if (user == null)
         {
-            throw new UserWithUsernameDoesNotExist(username);
+            throw new UserWithUsernameDoesNotExistException(username);
         }
 
         if (!BCrypt.Net.BCrypt.Verify(password, user.Password))

@@ -9,7 +9,7 @@ public class CreateUserTable : Migration
     {
         Create.Table("Users")
             .WithColumn("Id").AsGuid().PrimaryKey()
-            .WithColumn("FirstName").AsString().NotNullable()
+            .WithColumn("Username").AsString().NotNullable()
             .WithColumn("LastName").AsString().NotNullable()
             .WithColumn("Role").AsString().NotNullable()
             .WithColumn("Token").AsString().Nullable()

@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text;
+using Microsoft.Extensions.Primitives;
 using Service.Exceptions.UserExceptions;
 using Service.Services.Interfaces;
 
@@ -9,36 +10,36 @@ public class BasicAuthMiddleware(RequestDelegate next)
 {
     public async Task InvokeAsync(HttpContext context, IUserService userService)
     {
-        if (context.Request.Headers.TryGetValue("Authorization", out var authHeader))
+        if (context.Request.Headers.TryGetValue("Authorization", out StringValues authHeader))
         {
-            var authHeaderValue = authHeader.ToString();
+            string authHeaderValue = authHeader.ToString();
             if (authHeaderValue.StartsWith("Basic ", StringComparison.OrdinalIgnoreCase))
             {
-                var token = authHeaderValue.Substring("Basic ".Length).Trim();
+                string token = authHeaderValue.Substring("Basic ".Length).Trim();
                 try
                 {
-                    var credentialBytes = Convert.FromBase64String(token);
-                    var credentials = Encoding.UTF8.GetString(credentialBytes).Split(':', 2);
+                    byte[] credentialBytes = Convert.FromBase64String(token);
+                    string[] credentials = Encoding.UTF8.GetString(credentialBytes).Split(':', 2);
 
                     if (credentials.Length == 2)
                     {
-                        var username = credentials[0];
-                        var password = credentials[1];
+                        string username = credentials[0];
+                        string password = credentials[1];
 
                         try
                         {
-                            await userService.BasicAuthentication(username, password);
+                            await userService.AuthenticateBasic(username, password);
                             
                         }
-                        catch (UserWithUsernameDoesNotExist userWithUsernameExists)
+                        catch (UserWithUsernameDoesNotExistException userWithUsernameExists)
                         {
                             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                            await context.Response.WriteAsync("User with that username does not exist.");
+                            await context.Response.WriteAsync(userWithUsernameExists.Message);
                         }
                         catch (WrongPasswordException wrongPasswordException)
                         {
                             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                            await context.Response.WriteAsync("Wrong password.");
+                            await context.Response.WriteAsync(wrongPasswordException.Message);
                         }
                         await next(context);
                         return;
