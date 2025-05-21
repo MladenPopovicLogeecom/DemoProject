@@ -43,7 +43,7 @@ public class CategoryController(ICategoryService categoryService, IMapper mapper
     [HttpPost]
     public async Task<ActionResult> AddCategory(CategoryDto categoryDto)
     {
-        Category newCategory = mapper.Map<Category>(categoryDto);
+        var newCategory = mapper.Map<Category>(categoryDto);
 
         try
         {
@@ -81,7 +81,7 @@ public class CategoryController(ICategoryService categoryService, IMapper mapper
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateById(Guid id, CategoryDto dto)
     {
-        Category newCategory = mapper.Map<Category>(dto);
+        var newCategory = mapper.Map<Category>(dto);
         try
         {
             await categoryService.Update(id, newCategory);

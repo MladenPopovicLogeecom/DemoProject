@@ -5,7 +5,6 @@ using Service.Entities;
 
 namespace API.Mappers;
 
-
 public class Mapper : Profile
 {
     public Mapper()

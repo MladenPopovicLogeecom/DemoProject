@@ -26,15 +26,16 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context, MessageChan
     public async Task<Category?> GetById(Guid id)
     {
         messageChannel.AddMessage("Getting category by id");
+
         return await context.Categories
             .Include(c => c.ChildCategories)
             .FirstOrDefaultAsync(c => c.Id == id && c.DeletedAt == null);
     }
 
-
     public async Task<List<Category>> GetAll()
     {
         messageChannel.AddMessage("Getting all categories");
+
         return await context.Categories
             .Where(c => c.DeletedAt == null)
             .Include(c => c.ChildCategories)
@@ -44,6 +45,7 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context, MessageChan
     public async Task<List<Category>> GetAllParents()
     {
         messageChannel.AddMessage("Getting all parent categories");
+
         return await context.Categories
             .Where(c => c.ParentCategoryId == null && c.DeletedAt == null)
             .Include(c => c.ChildCategories)
@@ -90,27 +92,26 @@ public class CategoryRepositoryPostgre(ApplicationDbContext context, MessageChan
         await context.SaveChangesAsync();
     }
 
-
     public async Task SoftDelete(Guid id)
     {
         messageChannel.AddMessage("Soft deleting category");
-        Category category = (await context.Categories.FindAsync(id))!;
+        var category = (await context.Categories.FindAsync(id))!;
         category.DeletedAt = DateTime.UtcNow;
         await context.SaveChangesAsync();
     }
 
-
     public async Task<Category?> GetCategoryByTitle(string title)
     {
         messageChannel.AddMessage("Getting category by title");
+
         return await context.Categories
             .FirstOrDefaultAsync(c => c.Title == title && c.DeletedAt == null);
     }
 
-
     public async Task<Category?> GetCategoryByCode(string code)
     {
         messageChannel.AddMessage("Getting category by title");
+
         return await context.Categories
             .FirstOrDefaultAsync(c => c.Code == code && c.DeletedAt == null);
     }

@@ -52,10 +52,11 @@ public class ProductController(IProductService productService, IMapper mapper) :
     [HttpPost]
     public async Task<ActionResult> Add(ProductDto dto)
     {
-        Product newProduct = mapper.Map<Product>(dto);
+        var newProduct = mapper.Map<Product>(dto);
         try
         {
             await productService.Add(newProduct);
+
             return Ok("Product created!");
         }
         catch (Exception exception)
@@ -67,10 +68,11 @@ public class ProductController(IProductService productService, IMapper mapper) :
     [HttpPut("{id}")]
     public async Task<ActionResult> Update(ProductDto dto, Guid id)
     {
-        Product newProduct = mapper.Map<Product>(dto);
+        var newProduct = mapper.Map<Product>(dto);
         try
         {
             await productService.Update(id, newProduct);
+
             return Ok("Product Updated!");
         }
         catch (Exception exception)
@@ -85,6 +87,7 @@ public class ProductController(IProductService productService, IMapper mapper) :
         try
         {
             await productService.Delete(id);
+
             return Ok("Product Deleted!");
         }
         catch (Exception exception)

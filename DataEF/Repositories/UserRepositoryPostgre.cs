@@ -6,7 +6,6 @@ using Service.Entities;
 namespace DataEF.Repositories;
 
 public class UserRepositoryPostgre(ApplicationDbContext context) : IUserRepository
-
 {
     public async Task<User?> GetUserByUsername(string username)
     {
@@ -22,6 +21,6 @@ public class UserRepositoryPostgre(ApplicationDbContext context) : IUserReposito
 
     public async Task<User?> GetUserByToken(string token)
     {
-        return await context.Users.FirstOrDefaultAsync(u=> u.Token == token);
+        return await context.Users.FirstOrDefaultAsync(u => u.Token == token);
     }
 }

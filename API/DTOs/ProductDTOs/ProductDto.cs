@@ -2,7 +2,6 @@
 
 public class ProductDto
 {
-    
     public required string Sku { get; init; }
     public required string Title { get; init; }
     public required string Brand { get; init; }

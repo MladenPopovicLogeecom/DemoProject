@@ -18,8 +18,8 @@ var builder = Host.CreateDefaultBuilder(args)
 
         //Background processes
         services.AddHostedService<CategoryDeleter>();
-        services.AddHostedService<RecentProductsUnflagger>();
-        
+        services.AddHostedService<RecentlyVisitedProductsCleaner>();
+
         services.AddSingleton<MessageChannel>();
         services.AddTransient<ICategoryRepository, CategoryRepositoryPostgre>();
         services.AddTransient<IProductRepository, ProductRepositoryPostgre>();

@@ -4,7 +4,7 @@ using Service.Contracts.Repository;
 
 namespace BackgroundWorker.BackgroundServices;
 
-public class RecentProductsUnflagger(IServiceScopeFactory scopeFactory) : BackgroundService
+public class RecentlyVisitedProductsCleaner(IServiceScopeFactory scopeFactory) : BackgroundService
 {
     private readonly PeriodicTimer timer = new(TimeSpan.FromSeconds(10));
 
@@ -13,16 +13,14 @@ public class RecentProductsUnflagger(IServiceScopeFactory scopeFactory) : Backgr
         try
         {
             while (!stoppingToken.IsCancellationRequested)
+            while (await timer.WaitForNextTickAsync(stoppingToken))
             {
-                while (await timer.WaitForNextTickAsync(stoppingToken))
-                {
-                    Console.WriteLine("[RecentProductsUnflagger] Unflagging recent products.");
+                Console.WriteLine("[ProductVisitedAtCleaner] Unflagging recent products.");
 
-                    using var scope = scopeFactory.CreateScope();
-                    var repository = scope.ServiceProvider.GetRequiredService<IProductRepository>();
+                using var scope = scopeFactory.CreateScope();
+                var repository = scope.ServiceProvider.GetRequiredService<IProductRepository>();
 
-                    await repository.UnflaggRecentViewProducts();
-                }
+                await repository.CleanRecentlyVisitedProducts();
             }
         }
         catch (OperationCanceledException e)

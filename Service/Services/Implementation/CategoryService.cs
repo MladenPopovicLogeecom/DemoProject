@@ -18,14 +18,14 @@ public class CategoryService(ICategoryRepository repository, CategoryBusinessVal
 
         if (category.ParentCategoryId != null)
         {
-            Category parent = await categoryBusinessValidator.EnsureIdExists(category.ParentCategoryId.Value);
+            var parent = await categoryBusinessValidator.EnsureCategoryExists(category.ParentCategoryId.Value);
             await repository.AddChildToParent(parent, category);
         }
     }
 
     public async Task Update(Guid id, Category dto)
     {
-        Category existingCategory = await categoryBusinessValidator.EnsureIdExists(id);
+        var existingCategory = await categoryBusinessValidator.EnsureCategoryExists(id);
         await categoryBusinessValidator.EnsureTitleIsUnique(dto.Title);
         categoryBusinessValidator.EnsureNotSettingItselfAsParent(existingCategory, dto);
         await categoryBusinessValidator.HandleParentCategoryChange(existingCategory, dto.ParentCategoryId);
@@ -39,7 +39,7 @@ public class CategoryService(ICategoryRepository repository, CategoryBusinessVal
 
     public async Task<Category> GetById(Guid id)
     {
-        return await categoryBusinessValidator.EnsureIdExists(id);
+        return await categoryBusinessValidator.EnsureCategoryExists(id);
     }
 
     public async Task<List<Category>> GetAll()
@@ -54,18 +54,18 @@ public class CategoryService(ICategoryRepository repository, CategoryBusinessVal
 
     public async Task SoftDelete(Guid id)
     {
-        Category cat = await DeleteLogic(id);
+        var cat = await DeleteLogic(id);
         await repository.SoftDelete(cat.Id);
     }
 
     private async Task<Category> DeleteLogic(Guid id)
     {
-        Category category = await categoryBusinessValidator.EnsureIdExists(id);
+        var category = await categoryBusinessValidator.EnsureCategoryExists(id);
         categoryBusinessValidator.EnsureCategoryHasNoChildren(category);
         categoryBusinessValidator.EnsureCategoryHasNoProducts(category);
         if (category.ParentCategoryId != null)
         {
-            Category parent = await categoryBusinessValidator.EnsureIdExists(category.ParentCategoryId.Value);
+            var parent = await categoryBusinessValidator.EnsureCategoryExists(category.ParentCategoryId.Value);
             await repository.DeleteChildFromParent(parent, category);
         }
 

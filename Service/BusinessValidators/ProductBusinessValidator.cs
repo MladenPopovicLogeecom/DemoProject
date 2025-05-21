@@ -6,9 +6,9 @@ namespace Service.BusinessValidators;
 
 public class ProductBusinessValidator(IProductRepository repository)
 {
-    public async Task<Product> EnsureIdExists(Guid id)
+    public async Task<Product> EnsureProductExists(Guid id)
     {
-        Product? product = await repository.GetById(id);
+        var product = await repository.GetById(id);
         if (product == null)
         {
             throw new ProductWithIdNotFoundException(id);

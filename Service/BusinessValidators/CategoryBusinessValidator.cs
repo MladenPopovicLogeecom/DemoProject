@@ -22,9 +22,9 @@ public class CategoryBusinessValidator(ICategoryRepository categoryRepository, I
         }
     }
 
-    public async Task<Category> EnsureIdExists(Guid id)
+    public async Task<Category> EnsureCategoryExists(Guid id)
     {
-        Category? category = await categoryRepository.GetById(id);
+        var category = await categoryRepository.GetById(id);
         if (category == null)
         {
             throw new CategoryWithIdNotFoundException(id);
@@ -39,7 +39,8 @@ public class CategoryBusinessValidator(ICategoryRepository categoryRepository, I
         {
             throw new CategoryHasChildrenException(category.Title);
         }
-    }   
+    }
+
     public void EnsureCategoryHasNoProducts(Category category)
     {
         if (productRepository.ExistsByCategoryId(category.Id))
@@ -65,13 +66,13 @@ public class CategoryBusinessValidator(ICategoryRepository categoryRepository, I
 
         if (category.ParentCategoryId.HasValue)
         {
-            Category oldParent = (await categoryRepository.GetById(category.ParentCategoryId.Value))!;
+            var oldParent = (await categoryRepository.GetById(category.ParentCategoryId.Value))!;
             oldParent.ChildCategories.Remove(category);
         }
 
         if (newParentId.HasValue)
         {
-            Category newParent = (await categoryRepository.GetById(newParentId.Value))!;
+            var newParent = (await categoryRepository.GetById(newParentId.Value))!;
             newParent.ChildCategories.Add(category);
         }
 

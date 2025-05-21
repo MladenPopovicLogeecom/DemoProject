@@ -5,23 +5,19 @@ using Service.Services.Interfaces;
 
 namespace Service.Services.Implementation;
 
-public class ProductService(IProductRepository productRepository,ProductBusinessValidator productBusinessValidator) : IProductService
+public class ProductService(
+    IProductRepository productRepository,
+    ProductBusinessValidator productBusinessValidator)
+    : IProductService
 {
     public async Task Update(Guid id, Product updatedProduct)
     {
-        Product product = (await productBusinessValidator.EnsureIdExists(id));
+        Product product = await productBusinessValidator.EnsureProductExists(id);
 
         await productBusinessValidator.EnsureSkuIsUnique(updatedProduct.Sku);
         await productBusinessValidator.EnsureTitleIsUnique(updatedProduct.Title);
-        
-        product.Sku = updatedProduct.Sku;
-        product.Title = updatedProduct.Title;
-        product.Brand = updatedProduct.Brand;
-        product.Price = updatedProduct.Price;
-        product.ShortDescription = updatedProduct.ShortDescription;
-        product.LongDescription = updatedProduct.LongDescription;
-        product.IsEnabled = updatedProduct.IsEnabled;
-        product.IsFeatured = updatedProduct.IsFeatured;
+
+        product.ApplyUpdatesFrom(updatedProduct);
 
         await productRepository.Update(product);
     }
@@ -33,12 +29,16 @@ public class ProductService(IProductRepository productRepository,ProductBusiness
 
     public async Task<Product> GetById(Guid id)
     {
-        Product product=await productBusinessValidator.EnsureIdExists(id);
+        var product = await productBusinessValidator.EnsureProductExists(id);
+
         product.VisitedAt = DateTime.UtcNow;
         product.ViewCount += 1;
+
         await productRepository.Update(product);
+
         return product;
     }
+
     public async Task Add(Product product)
     {
         await productBusinessValidator.EnsureSkuIsUnique(product.Sku);
@@ -54,6 +54,5 @@ public class ProductService(IProductRepository productRepository,ProductBusiness
     public async Task<List<Product>> GetRecentlyViewedProducts()
     {
         return await productRepository.GetRecentlyViewedProducts();
-        
     }
 }

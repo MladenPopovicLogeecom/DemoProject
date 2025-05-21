@@ -21,14 +21,12 @@ public class CreateProductTable : Migration
             .WithColumn("IsFeatured").AsBoolean().Nullable()
             .WithColumn("ViewCount").AsInt16().Nullable()
             .WithColumn("VisitedAt").AsDateTime2().Nullable();
-        
+
         Create.ForeignKey("FK_Products_Categories")
             .FromTable("Products").ForeignColumn("CategoryId")
             .ToTable("Categories").PrimaryColumn("Id")
-            .OnDeleteOrUpdate(Rule.None); 
-        
+            .OnDeleteOrUpdate(Rule.None);
     }
-    
 
     public override void Down()
     {

@@ -41,10 +41,10 @@ public class JwtHelper(IConfiguration config)
                 ValidateAudience = false,
                 ValidateLifetime = false,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
+                IssuerSigningKey = new SymmetricSecurityKey(key)
             };
 
-            var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
+            var principal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
 
             if (validatedToken is JwtSecurityToken jwtToken &&
                 jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))

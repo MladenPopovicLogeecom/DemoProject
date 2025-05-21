@@ -7,11 +7,7 @@ public class LoggerBackgroundService(MessageChannel messageChannel) : Background
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
-        {
             await foreach (var message in messageChannel.Reader.ReadAllAsync(stoppingToken))
-            {
                 Console.WriteLine($"[Logger] {message}");
-            }
-        }
     }
 }

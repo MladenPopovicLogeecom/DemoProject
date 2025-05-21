@@ -2,9 +2,13 @@
 
 public class Product
 {
-    public Product() { }
+    public Product()
+    {
+    }
 
-    public Product(Guid? id, string sku, string title, string brand, Guid categoryId, decimal price, string? shortDescription, string? longDescription, bool isEnabled, bool isFeatured, int viewCount, DateTime visitedAt)
+    public Product(Guid? id, string sku, string title, string brand, Guid categoryId, decimal price,
+        string? shortDescription, string? longDescription, bool isEnabled, bool isFeatured, int viewCount,
+        DateTime visitedAt)
     {
         Id = id;
         Sku = sku;
@@ -24,7 +28,7 @@ public class Product
     public required string Sku { get; set; }
     public required string Title { get; set; }
     public required string Brand { get; set; }
-    public required Guid CategoryId { get; init; }
+    public required Guid CategoryId { get; set; }
     public required decimal Price { get; set; }
     public string? ShortDescription { get; set; }
     public string? LongDescription { get; set; }
@@ -32,4 +36,18 @@ public class Product
     public bool IsFeatured { get; set; }
     public int ViewCount { get; set; }
     public DateTime? VisitedAt { get; set; }
+    
+    public void ApplyUpdatesFrom(Product source)
+    {
+        Sku = source.Sku;
+        Title = source.Title;
+        Brand = source.Brand;
+        Price = source.Price;
+        CategoryId = source.CategoryId;
+        ShortDescription = source.ShortDescription;
+        LongDescription = source.LongDescription;
+        IsEnabled = source.IsEnabled;
+        IsFeatured = source.IsFeatured;
+    }
+
 }

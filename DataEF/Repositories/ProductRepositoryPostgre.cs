@@ -31,7 +31,7 @@ public class ProductRepositoryPostgre(ApplicationDbContext context) : IProductRe
 
     public async Task Delete(Guid id)
     {
-        Product? product = await context.Products.FindAsync(id);
+        var product = await context.Products.FindAsync(id);
         if (product != null)
         {
             context.Products.Remove(product);
@@ -55,20 +55,13 @@ public class ProductRepositoryPostgre(ApplicationDbContext context) : IProductRe
             .OrderByDescending(c => c.VisitedAt).ToListAsync();
     }
 
-    public async Task UnflaggRecentViewProducts()
+    public async Task CleanRecentlyVisitedProducts()
     {
         List<Product> productsWithVisitedAt = await context.Products
             .Where(p => p.VisitedAt != null)
             .ToListAsync();
 
-
-        foreach (var product in productsWithVisitedAt)
-        {
-            product.VisitedAt = null;
-            //context.Entry(product).State = EntityState.Modified;
-
-        }
-
+        foreach (var product in productsWithVisitedAt) product.VisitedAt = null;
         await context.SaveChangesAsync();
     }
 
@@ -78,6 +71,7 @@ public class ProductRepositoryPostgre(ApplicationDbContext context) : IProductRe
         {
             return true;
         }
+
         return false;
     }
 }

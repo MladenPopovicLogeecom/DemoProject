@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Text;
-using Microsoft.Extensions.Primitives;
 using Service.Exceptions.UserExceptions;
 using Service.Services.Interfaces;
 
@@ -10,26 +9,25 @@ public class BasicAuthMiddleware(RequestDelegate next)
 {
     public async Task InvokeAsync(HttpContext context, IUserService userService)
     {
-        if (context.Request.Headers.TryGetValue("Authorization", out StringValues authHeader))
+        if (context.Request.Headers.TryGetValue("Authorization", out var authHeader))
         {
-            string authHeaderValue = authHeader.ToString();
+            var authHeaderValue = authHeader.ToString();
             if (authHeaderValue.StartsWith("Basic ", StringComparison.OrdinalIgnoreCase))
             {
-                string token = authHeaderValue.Substring("Basic ".Length).Trim();
+                var token = authHeaderValue.Substring("Basic ".Length).Trim();
                 try
                 {
-                    byte[] credentialBytes = Convert.FromBase64String(token);
+                    var credentialBytes = Convert.FromBase64String(token);
                     string[] credentials = Encoding.UTF8.GetString(credentialBytes).Split(':', 2);
 
                     if (credentials.Length == 2)
                     {
-                        string username = credentials[0];
-                        string password = credentials[1];
+                        var username = credentials[0];
+                        var password = credentials[1];
 
                         try
                         {
                             await userService.AuthenticateBasic(username, password);
-                            
                         }
                         catch (UserWithUsernameDoesNotExistException userWithUsernameExists)
                         {
@@ -41,15 +39,17 @@ public class BasicAuthMiddleware(RequestDelegate next)
                             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                             await context.Response.WriteAsync(wrongPasswordException.Message);
                         }
+
                         await next(context);
+
                         return;
-                        
                     }
                 }
                 catch (Exception exception)
                 {
                     context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                     await context.Response.WriteAsync(exception.Message);
+
                     return;
                 }
             }

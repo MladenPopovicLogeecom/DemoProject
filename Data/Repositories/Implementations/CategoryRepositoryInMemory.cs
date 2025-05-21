@@ -10,20 +10,22 @@ public class CategoryRepositoryInMemory : ICategoryRepository
     public Task Add(Category category)
     {
         categories.Add(category);
+
         return Task.CompletedTask;
     }
 
     public Task Update(Category category)
     {
-        int index = categories.FindIndex(c => c.Id == category.Id);
+        var index = categories.FindIndex(c => c.Id == category.Id);
         categories[index] = category;
+
         return Task.CompletedTask;
-        
     }
 
     public Task<List<Category>> GetAllParents()
     {
         List<Category> parents = categories.Where(c => c.ParentCategoryId == null).ToList();
+
         return Task.FromResult(parents);
     }
 
@@ -31,6 +33,7 @@ public class CategoryRepositoryInMemory : ICategoryRepository
     {
         throw new NotImplementedException();
     }
+
     public Task SoftDelete(Guid id)
     {
         throw new NotImplementedException();
@@ -40,6 +43,7 @@ public class CategoryRepositoryInMemory : ICategoryRepository
     {
         parent.ChildCategories.Remove(child);
         Update(parent);
+
         return Task.CompletedTask;
     }
 

@@ -21,6 +21,4 @@ public class UserController(IUserService userService) : ControllerBase
             return Unauthorized("Invalid username or password");
         }
     }
-    
-
 }
