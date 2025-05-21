@@ -29,6 +29,7 @@ public class JwtAuthenticationMiddleware(RequestDelegate next)
         var principal = jwtHelper.ValidateToken(token);
         if (principal == null)
         {
+            
             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
             await context.Response.WriteAsync("JWT Middleware: Invalid token.");
             return;

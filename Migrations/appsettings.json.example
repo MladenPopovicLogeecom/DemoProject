@@ -10,12 +10,6 @@
   "ConnectionStrings": {
     "DBConnection": "Host=....;Port=....;Database=....;Username=....;Password=...."
   }
-  "JwtSettings": {
-      "Secret": "",
-      "Issuer": "",
-      "Audience": "",
-      "ExpiresInMinutes": 
-    }
 }
 
 

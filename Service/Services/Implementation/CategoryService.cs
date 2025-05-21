@@ -5,10 +5,9 @@ using Service.Services.Interfaces;
 
 namespace Service.Services.Implementation;
 
-public class CategoryService(ICategoryRepository repository, CategoryBusinessValidator categoryBusinessValidator) : ICategoryService
+public class CategoryService(ICategoryRepository repository, CategoryBusinessValidator categoryBusinessValidator)
+    : ICategoryService
 {
-
-
     public async Task Add(Category category)
     {
         await categoryBusinessValidator.EnsureCodeIsUnique(category.Code);
@@ -37,7 +36,7 @@ public class CategoryService(ICategoryRepository repository, CategoryBusinessVal
         existingCategory.ParentCategoryId = dto.ParentCategoryId;
         await repository.Update(existingCategory);
     }
-    
+
     public async Task<Category> GetById(Guid id)
     {
         return await categoryBusinessValidator.EnsureIdExists(id);
@@ -52,13 +51,13 @@ public class CategoryService(ICategoryRepository repository, CategoryBusinessVal
     {
         return await repository.GetAllParents();
     }
-    
+
     public async Task SoftDelete(Guid id)
     {
         Category cat = await DeleteLogic(id);
         await repository.SoftDelete(cat.Id);
     }
-    
+
     private async Task<Category> DeleteLogic(Guid id)
     {
         Category category = await categoryBusinessValidator.EnsureIdExists(id);

@@ -2,8 +2,9 @@
 
 public class CategoryDto
 {
-    public required string Title { get; init; }
-    public required string Code { get; init; }
-    public string? Description { get; init; }
+    public required string Title { get; set; }
+    public required string Code { get; set; }
+    public required string? Description { get; set; }
+
     public Guid? ParentCategoryId { get; init; }
 }

@@ -14,7 +14,6 @@ using Service.Services.JWT;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 //Dependency Injection
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<IUserService, UserService>();
@@ -30,7 +29,6 @@ builder.Services.AddTransient<JwtHelper>();
 
 //Background process
 builder.Services.AddHostedService<LoggerBackgroundService>();
-
 
 //Controllers
 builder.Services.AddControllers();
@@ -63,8 +61,6 @@ app.UseMiddleware<JwtAuthorizationMiddleware>();
 app.UseAuthorization();
 app.UseAuthorization();
 
-
 app.MapControllers();
-
 
 app.Run();

@@ -38,7 +38,7 @@ public class CategoryController(ICategoryService categoryService, IMapper mapper
     {
         return await categoryService.GetAllParents();
     }
-    
+
     [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult> AddCategory(CategoryDto categoryDto)

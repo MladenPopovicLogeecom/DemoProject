@@ -21,7 +21,8 @@ public class ProductController(IProductService productService, IMapper mapper) :
         {
             return BadRequest(exception.Message);
         }
-    }    
+    }
+
     [HttpGet("recents")]
     public async Task<ActionResult<List<Product>>> GetRecentlyViewedProducts()
     {
@@ -77,6 +78,7 @@ public class ProductController(IProductService productService, IMapper mapper) :
             return BadRequest(exception.Message);
         }
     }
+
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(Guid id)
     {
