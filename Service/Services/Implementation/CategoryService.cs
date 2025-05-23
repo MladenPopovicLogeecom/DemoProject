@@ -14,21 +14,37 @@ public class CategoryService(ICategoryRepository repository, CategoryBusinessVal
         await categoryBusinessValidator.EnsureTitleIsUnique(category.Title);
 
         category.Id = Guid.NewGuid();
-        await repository.Add(category);
 
         if (category.ParentCategoryId != null)
         {
             Category parent = await categoryBusinessValidator.EnsureCategoryExists(category.ParentCategoryId.Value);
+            await repository.Add(category);
             await repository.AddChildToParent(parent, category);
+        }
+        else
+        {
+            await repository.Add(category);
         }
     }
 
     public async Task Update(Guid id, Category dto)
     {
         Category existingCategory = await categoryBusinessValidator.EnsureCategoryExists(id);
-        await categoryBusinessValidator.EnsureTitleIsUnique(dto.Title);
+
+        if (existingCategory.Title != dto.Title)
+        {
+            await categoryBusinessValidator.EnsureTitleIsUnique(dto.Title);
+        }
+
+        if (existingCategory.Code != dto.Code)
+        {
+            await categoryBusinessValidator.EnsureCodeIsUnique(dto.Code);
+        }
+        
         categoryBusinessValidator.EnsureNotSettingItselfAsParent(existingCategory, dto);
         await categoryBusinessValidator.HandleParentCategoryChange(existingCategory, dto.ParentCategoryId);
+        
+        
 
         existingCategory.Title = dto.Title;
         existingCategory.Code = dto.Code;

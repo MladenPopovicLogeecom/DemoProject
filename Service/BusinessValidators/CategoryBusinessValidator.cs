@@ -72,7 +72,7 @@ public class CategoryBusinessValidator(ICategoryRepository categoryRepository, I
 
         if (newParentId.HasValue)
         {
-            Category newParent = (await categoryRepository.GetById(newParentId.Value))!;
+            Category newParent = await EnsureCategoryExists(newParentId.Value);
             newParent.ChildCategories.Add(category);
         }
 

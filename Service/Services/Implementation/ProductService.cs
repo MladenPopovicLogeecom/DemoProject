@@ -7,15 +7,25 @@ namespace Service.Services.Implementation;
 
 public class ProductService(
     IProductRepository productRepository,
-    ProductBusinessValidator productBusinessValidator)
+    ProductBusinessValidator productBusinessValidator,
+    CategoryBusinessValidator categoryBusinessValidator)
     : IProductService
 {
     public async Task Update(Guid id, Product updatedProduct)
     {
         Product product = await productBusinessValidator.EnsureProductExists(id);
 
-        await productBusinessValidator.EnsureSkuIsUnique(updatedProduct.Sku);
-        await productBusinessValidator.EnsureTitleIsUnique(updatedProduct.Title);
+        if (product.Sku != updatedProduct.Sku)
+        {
+            await productBusinessValidator.EnsureSkuIsUnique(updatedProduct.Sku);
+        }
+
+        if (product.Title != updatedProduct.Title)
+        {
+            await productBusinessValidator.EnsureTitleIsUnique(updatedProduct.Title);
+        }
+
+        await categoryBusinessValidator.EnsureCategoryExists(product.CategoryId);
 
         product.ApplyUpdatesFrom(updatedProduct);
 
@@ -43,11 +53,14 @@ public class ProductService(
     {
         await productBusinessValidator.EnsureSkuIsUnique(product.Sku);
         await productBusinessValidator.EnsureTitleIsUnique(product.Title);
+        await categoryBusinessValidator.EnsureCategoryExists(product.CategoryId);
+
         await productRepository.Add(product);
     }
 
     public async Task Delete(Guid id)
     {
+        await productBusinessValidator.EnsureProductExists(id);
         await productRepository.Delete(id);
     }
 

@@ -13,6 +13,8 @@ public class AddUsers : Migration
         {
             Id=Guid.NewGuid(),
             Username = "admin",
+            LastName = "admin",
+            Token=(string?)null,
             Password = passwordHash,
             Role = "Admin"
         });
@@ -21,6 +23,8 @@ public class AddUsers : Migration
         {
             Id=Guid.NewGuid(),
             Username = "user",
+            LastName = "user",
+            Token=(string?)null,
             Password = passwordHash,
             Role = "User"
         });
