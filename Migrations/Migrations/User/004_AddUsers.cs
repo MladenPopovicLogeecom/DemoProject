@@ -11,15 +11,17 @@ public class AddUsers : Migration
 
         Insert.IntoTable("Users").Row(new
         {
+            Id=Guid.NewGuid(),
             Username = "admin",
-            PasswordHash = passwordHash,
+            Password = passwordHash,
             Role = "Admin"
         });
 
         Insert.IntoTable("Users").Row(new
         {
+            Id=Guid.NewGuid(),
             Username = "user",
-            PasswordHash = passwordHash,
+            Password = passwordHash,
             Role = "User"
         });
         
