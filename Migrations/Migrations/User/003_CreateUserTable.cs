@@ -2,7 +2,7 @@
 
 namespace Migrations.Migrations.User;
 
-[Migration(2, "Create User Table")]
+[Migration(3, "Create User Table")]
 public class CreateUserTable : Migration
 {
     public override void Up()

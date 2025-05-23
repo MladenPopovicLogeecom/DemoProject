@@ -3,7 +3,7 @@ using FluentMigrator;
 
 namespace Migrations.Migrations.Product;
 
-[Migration(9, "Create Product Table")]
+[Migration(2, "Create Product Table")]
 public class CreateProductTable : Migration
 {
     public override void Up()
