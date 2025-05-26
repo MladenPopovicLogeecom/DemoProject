@@ -25,7 +25,7 @@ public class ProductService(
             await productBusinessValidator.EnsureTitleIsUnique(updatedProduct.Title);
         }
 
-        await categoryBusinessValidator.EnsureCategoryExists(product.CategoryId);
+        await categoryBusinessValidator.EnsureCategoryExists(updatedProduct.CategoryId);
 
         product.ApplyUpdatesFrom(updatedProduct);
 
